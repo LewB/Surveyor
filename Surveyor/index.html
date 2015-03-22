@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<!--
+******************************************************
+NAME: index.html
+******************************************************
+USAGE:
+******************************************************
+FUNCTIONAL DESCRIPTION: 
+This file defines DOM elements for the display of
+the survey input screen.
+********************************************************
+MODIFICATION HISTORY:
+02-26-2015-ALB File Created.
+
+********************************************************
+-->
+<head>
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<script type="text/javascript" src="js/index.js"></script>
+<title>Python Survey Response Processor</title>
+</head>
+<body>
+<div id="svyTitle">
+    <h2>START A SURVEY</h2>
+</div>
+<div id="svyCodeDiv">
+<form id="svyCodeFrm">
+    Code:&nbsp;<input type="text" id="svyCodeInp" autofocus value="">
+    <br><br>
+    <button type="button" onclick="load_survey()">Start Survey</button>
+</form>
+</div>
+<br>
+<div id="svyBodyDiv">
+</div>
+</body>
+</html>

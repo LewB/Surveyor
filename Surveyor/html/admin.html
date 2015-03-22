@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<!--
+******************************************************
+NAME: admin.html
+******************************************************
+USAGE:
+Called from "login.html"
+******************************************************
+FUNCTIONAL DESCRIPTION: 
+This file defines DOM elements for the Administration of
+the survey system.
+********************************************************
+MODIFICATION HISTORY:
+02-21-2015 - File Created - ALB
+02-21-2015 - Update to scrolling Table for Admin Logins
+********************************************************
+-->
+<head>
+<link rel="stylesheet" type="text/css" href="/css/admin.css">
+<script type="text/javascript" src="/js/common_lib.js"></script>
+<script type="text/javascript" src="/js/admin.js"></script>
+
+<script>window.onload = admin_login;</script>
+<title>Python Survey Manager Administration</title>
+</head>
+<body>
+<h2>SURVEY MANAGER - Administration</h2>
+<div id="fld_data_hdr">
+    A D M I N &nbsp;&nbsp; U S E R &nbsp;&nbsp; M A I N T E N A N C E
+    <br>
+    <span id="currUser">Current User: &nbsp; <span id="logUserID">None</span></span>
+</div>
+<br>
+<div id="userDataDiv">
+    <div id="tblHdrDiv">
+        <table id="tblHdr">
+          <colgroup>
+            <col class="c1">
+            <col class="c2">
+            <col class="c3">
+            <col class="c4">
+          </colgroup>
+          <tr>
+            <td><input type="checkbox" id="selAllCbx" disabled/></td>
+            <td>LOGIN ID</td>
+            <td>PASSWORD</td>
+            <td>EMAIL</td>
+          </tr>
+        </table>
+    </div>
+    <div id="tblBodyDiv">
+        <!-- Dynamic table "tblBody" gets created by admin_initlist() here. -->
+    </div>
+    <div id="tblBtnDiv">
+        <button type="button" id="addbtn" class="stdBtn" onclick="admin_NewUserBtn();">Add New User</button>
+        <button type="button" id="delbtn" class="stdBtn" onclick="admin_UpdUserBtn('DEL');">Delete Checked Users</button>
+        <button type="button" id="savbtn" class="stdBtn" onclick="admin_UpdUserBtn('CHG');">Save All Changes</button>
+        <button type="button" id="relbtn" class="stdBtn" onclick="admin_initlist();">Reload Data</button>
+    </div>
+</div>
+<br>
+<div class="status" id="stsDiv">
+Enter Data and Select and Action.
+</div>
+</body>
+</html>

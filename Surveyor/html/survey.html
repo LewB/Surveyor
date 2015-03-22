@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<!--
+******************************************************
+NAME: survey.html
+******************************************************
+USAGE:
+******************************************************
+FUNCTIONAL DESCRIPTION: 
+This file defines DOM elements for the display of
+the survey input screen.
+********************************************************
+MODIFICATION HISTORY:
+02-26-2015 - File Created - ALB
+
+********************************************************
+-->
+<head>
+<link rel="stylesheet" type="text/css" href="/css/survey.css">
+<script type="text/javascript" src="/js/common_lib.js"></script>
+<script type="text/javascript" src="/js/survey.js"></script>
+<script>window.onload = survey_login;</script>
+
+<title>Python Survey</title>
+</head>
+<body>
+<h2>SURVEY SETUP &amp; MAINTENANCE</h2>
+Current User:&nbsp;<span id="svyUser">None</span>
+<br><br>
+<div id="svyHdrDataDiv">
+    <div id="svyHdrHdrDiv">
+        <!-- Dynamic Table "svyHdrHdrTbl" gets created by surveyHdr_list() here. -->
+    </div>
+	<div id="svyHdrTblDiv">
+		<!-- Dynamic table "svyHdrTblBody" gets created by surveyHdr_list() here. -->
+	</div>
+	<div id="hdrTblBtnDiv">
+        <button type="button" id="hdraddbtn" class="stdBtn">Add New Survey</button>
+        <button type="button" id="hdrdelbtn" class="stdBtn">Delete Checked Surveys</button>
+        <button type="button" id="hdrsavbtn" class="stdBtn">Save All Changes</button>
+        <button type="button" id="hdrrelbtn" class="stdBtn">Reload Data</button>
+    </div>
+</div>
+<div id="svyCodeDiv">
+	<br>
+    Survey Detail Data for Survey Code:&nbsp;<span id="svyCodeTxt">No Survey Selected</span><br>
+    <br>
+</div>
+<div id="svyDtlDataDiv">
+    <div id="svyDtlHdrDiv">
+		<!-- Dynamic Table "svyDtlHdrTbl" gets created by surveyHdr_list() here. -->
+    </div>
+	<div id="svyDtlTblDiv">
+		<!-- Dynamic table "svyDtlTblBody" gets created by surveyHdr_list() here. -->
+	</div>
+	<div id="dtlTblBtnDiv">
+        <button type="button" id="dtladdbtn" class="stdBtn">Add New Item</button>
+        <button type="button" id="dtldelbtn" class="stdBtn">Delete Checked Items</button>
+        <button type="button" id="dtlsavbtn" class="stdBtn">Save All Changes</button>
+        <button type="button" id="dtlrelbtn" class="stdBtn">Reload Data</button>
+    </div>
+</div>
+<br>
+<div class="status" id="stsDiv">
+Enter Data and Select and Action.
+</div>
+</body>
+</html>
