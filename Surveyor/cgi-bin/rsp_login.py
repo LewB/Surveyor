@@ -48,7 +48,7 @@ def main():
                 except sqlite3.Error, e:
                     if dbc:
                         dbc.rollback()
-                    dbg = "ERR:Failed to Create Initial DB Table: e.args[0]"
+                    dbg = "ERR:Failed to Create Initial DB Table: " + e.args[0]
             else:
                 dbg = "ERR:BAD INITIAL CREDENTIALS=[LOGID=" + logid + "&LOGPW=" + logpw + "]."
         else:
@@ -68,13 +68,13 @@ def main():
                             dbc.rollback()
                         dbg = "ERR:Failed to Set LOGKEY For " + logid + "Error=" + e.args[0]
                 else:
-                    dbg = "DUPE:" + chkrow[3]
+                    dbg = "DUPE: " + chkrow[3]
         
     except sqlite3.Error, e:
         # Handle Exceptions
         if dbc:
             dbc.rollback()
-        dbg = "ERR:Admin DB Error=" + e.args[0]
+        dbg = "ERR: Admin DB: " + e.args[0]
         
     finally:
         # Close the database

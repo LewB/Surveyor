@@ -75,7 +75,7 @@ def main():
                         try:
                             dbc.execute("INSERT INTO SURVEY_HDR \
                                 (SH_CODE, SH_OWNER, SH_STATUS, SH_TYPE, \
-                                SH_NAME, SH_DESC, SH_SKIN) \
+                                        SH_NAME, SH_DESC, SH_SKIN) \
                                 VALUES ('" + row['SH_CODE'] + "', '" \
                                     + row['SH_OWNER'] + "', '" \
                                     + row['SH_STATUS'] + "', '" \
@@ -86,7 +86,47 @@ def main():
                             dbc.commit()
                             # Perform a Data Load to Establish ROWID after fresh Add
                         except (sqlite3.Error):
-                            dbg = "Failed to ADD Survey Header: " + row['SH_CODE'] + " to DB SURVEY_HDR Table."
+                            # check for hard coded initial values to create and access database table
+                            try:
+                                dbc.execute('''CREATE TABLE IF NOT EXISTS 'SURVEY_HDR'
+                                    ('SH_CODE' TEXT PRIMARY KEY     NOT NULL UNIQUE,
+                                    'SH_OWNER' TEXT                 NOT NULL,
+                                    'SH_STATUS' TEXT,
+                                    'SH_TYPE' TEXT,
+                                    'SH_NAME' TEXT,
+                                    'SH_DESC' TEXT,
+                                    'SH_SKIN' TEXT);''')
+                                # Also assume body detail table does not exist.
+                                dbc.execute('''CREATE TABLE IF NOT EXISTS SURVEY_BDY
+                                    `SB_HDR`    INTEGER NOT NULL,
+                                    `SB_SEQ`    INTEGER NOT NULL,
+                                    `SB_TYPE`    TEXT NOT NULL DEFAULT 'default',
+                                    `SB_TITLE`    TEXT NOT NULL,
+                                    `SB_DESC`    TEXT,
+                                    `SB_LABEL`    TEXT,
+                                    `SB_MIN`    INTEGER DEFAULT 1,
+                                    `SB_MAX`    INTEGER DEFAULT 5,
+                                    `SB_BTN_1`    TEXT DEFAULT 'Submit',
+                                    `SB_BTN_2`    TEXT,
+                                    `SB_BTN_3`    TEXT,
+                                    PRIMARY KEY(SB_HDR,SB_SEQ);''')
+                                dbc.execute("INSERT INTO SURVEY_HDR \
+                                    (SH_CODE, SH_OWNER, SH_STATUS, SH_TYPE, \
+                                            SH_NAME, SH_DESC, SH_SKIN) \
+                                    VALUES ('" + row['SH_CODE'] + "', '" \
+                                    + row['SH_OWNER'] + "', '" \
+                                    + row['SH_STATUS'] + "', '" \
+                                    + row['SH_TYPE'] + "', '" \
+                                    + row['SH_NAME'] + "', '" \
+                                    + row['SH_DESC'] + "', '" \
+                                    + row['SH_SKIN'] + "')")
+                                dbc.commit()
+                            except sqlite3.Error, e:
+                                if dbc:
+                                    dbc.rollback()
+                                dbg = "ERR:Failed to Create Initial DB Tables: " + e.args[0]
+                            else:
+                                dbg = "Failed to ADD Survey Header: " + row['SH_CODE'] + " to DB SURVEY_HDR Table."
                     else:
                         # Have a record match so Change it.
                         try:
