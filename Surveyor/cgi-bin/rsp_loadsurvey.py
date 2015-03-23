@@ -27,7 +27,10 @@ def main():
        svCode = "*"
     if svPart == None:
        svPart = "BOTH"
-       
+    
+    hdr_json = None
+    bdy_json = None
+    
     try:
         # connect to the database
         dbc = sqlite3.connect("data/rsp-survey.db")
@@ -49,8 +52,8 @@ def main():
                     # Extract the "rowid" from the First Row to GET key to the Body
                     sh_rowid = row['SH_ROWID']
                     if sh_rowid:
-                        csr.execute("SELECT * FROM SURVEY_BDY WHERE SB_HDR='" \
-                                              + str(sh_rowid) + "' ORDER BY SB_SEQ ASC")
+                        csr.execute("SELECT ROWID AS SB_ROWID,* FROM SURVEY_BDY WHERE SB_HDR=" \
+                                              + str(sh_rowid) + " ORDER BY SB_SEQ ASC")
                         rows = csr.fetchall()
                         bdy_json += json.dumps( [dict(idx) for idx in rows] )
             #

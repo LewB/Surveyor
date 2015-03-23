@@ -3,6 +3,8 @@
     Dynamically Generated HTML Survey Called by index.html"""
 # -*- coding: UTF-8 -*-
 
+import os
+
 # use the cgi library
 import cgi
 
@@ -15,7 +17,7 @@ import json
 
 # use python sqlite3 database
 import sqlite3
-from _sqlite3 import Row
+#from _sqlite3 import Row
 
 #Define Main Function
 def main():
@@ -49,25 +51,40 @@ def main():
             # ID Should Exist - go ahead and try to delete it
             if svPart == "HEADER":
                 try:
-                    dbc.execute("DELETE FROM SURVEY_HDR WHERE ROWID='" + jrows[0]['SB_ROWID'] + "'")
-                    dbc.execute("DELETE FROM SURVEY_BDY WHERE SB_HDR='" + jrows[0]['SB_HDR'] + "'")
+                    dbc.execute("DELETE FROM SURVEY_HDR WHERE ROWID=" + jrows[0]['SH_ROWID'] + ";")
+                    csr = dbc.cursor()
+                    csr.execute("SELECT ROWID FROM SURVEY_BDY WHERE ROWID=" + jrows[0]['SH_ROWID'] + ";")
+                    # Delete only if records found
+                    chkrow = csr.fetchone()
+                    if chkrow != None:
+                        dbc.execute("DELETE FROM SURVEY_BDY WHERE SB_HDR=" + jrows[0]['SH_ROWID'] + ";")
                     dbc.commit()
                 except (sqlite3.Error):
-                    dbg = "Failed to DELETE Survey Header: " + jrows[0]['SB_HDR'] + " Err: " + e.args[0]
+                    dbg = "Failed to DELETE Survey Header Or Detail For: " + jrows[0]['SH_CODE']
+                    raise
+                else:
+                    # Remove Survey Database Too - If it Exists
+                    dbPath = "data/" + jrows[0]['SH_CODE'] + ".db"
+                    try:
+                        if os.access(dbPath, os.W_OK) == True:
+                            os.remove(dbPath)
+                    except OSError, e:
+                        dbg = "Error Removing DB File: " + dbPath
+                        dbg += "\nOSerr: " + e.args[1]
             elif svPart == "BODY":
                 try:
-                    dbc.execute("DELETE FROM SURVEY_BDY WHERE SB_HDR='" + jrows[0]['SB_HDR'] + "'" \
-                                    + " AND SB_SEQ=" + jrows[0]['SB_SEQ'])
+                    dbc.execute("DELETE FROM SURVEY_BDY WHERE ROWID=" + jrows[0]['SB_ROWID'] + ";")
                     dbc.commit()
                 except (sqlite3.Error):
-                    dbg = "Failed to DELETE Survey Detail: " + jrows[0]['SB_HDR'] + " Err: " + e.args[0]
+                    dbg = "Failed to DELETE Survey Detail For: " + jrows[0]['SH_CODE']
+                    raise
         else:
             # ****** ADD OR CHANGE MODE *************************
             csr = dbc.cursor()
             for row in jrows:
                 if svPart == "HEADER":
                     # execute SQL SELECT on CGI values
-                    csr.execute("SELECT ROWID FROM SURVEY_HDR WHERE ROWID='" + row['SH_ROWID'] + "'")
+                    csr.execute("SELECT ROWID FROM SURVEY_HDR WHERE ROWID=" + row['SH_ROWID'] + ";")
                     # get first DB table row from cursor after select
                     chkrow = csr.fetchone()
                     if chkrow == None:
@@ -82,7 +99,7 @@ def main():
                                     + row['SH_TYPE'] + "', '" \
                                     + row['SH_NAME'] + "', '" \
                                     + row['SH_DESC'] + "', '" \
-                                    + row['SH_SKIN'] + "')")
+                                    + row['SH_SKIN'] + "');")
                             dbc.commit()
                             # Perform a Data Load to Establish ROWID after fresh Add
                         except (sqlite3.Error):
@@ -119,14 +136,11 @@ def main():
                                     + row['SH_TYPE'] + "', '" \
                                     + row['SH_NAME'] + "', '" \
                                     + row['SH_DESC'] + "', '" \
-                                    + row['SH_SKIN'] + "')")
+                                    + row['SH_SKIN'] + "');")
                                 dbc.commit()
-                            except sqlite3.Error, e:
-                                if dbc:
-                                    dbc.rollback()
+                            except (sqlite3.Error):
                                 dbg = "ERR:Failed to Create Initial DB Tables: " + e.args[0]
-                            else:
-                                dbg = "Failed to ADD Survey Header: " + row['SH_CODE'] + " to DB SURVEY_HDR Table."
+                                raise
                     else:
                         # Have a record match so Change it.
                         try:
@@ -138,13 +152,14 @@ def main():
                                     + "SH_NAME='" + row['SH_NAME'] + "'," \
                                     + "SH_DESC='" + row['SH_DESC'] + "'," \
                                     + "SH_SKIN='" + row['SH_SKIN'] + "' " \
-                                    + "WHERE ROWID='" + row['SH_ROWID'] + "'")
+                                    + "WHERE ROWID=" + row['SH_ROWID'] + ";")
                             dbc.commit()
                         except (sqlite3.Error):
                             dbg = "Failed to CHANGE Survey: " + row['SH_CODE'] + " in DB SURVEY_HDR Table."
+                            raise
                 elif svPart == "BODY":
-                    csr.execute("SELECT SB_HDR, SB_SEQ FROM SURVEY_BDY WHERE (SB_HDR='" + row['SB_HDR'] + "' \
-                                                            AND SB_SEQ='" + row['SB_SEQ'] + "')")
+                    csr.execute("SELECT SB_HDR, SB_SEQ FROM SURVEY_BDY WHERE (SB_HDR=" + row['SB_HDR'] + " \
+                                                            AND SB_SEQ=" + row['SB_SEQ'] + ");")
                     # get first DB table row from cursor after select
                     chkrow = csr.fetchone()
                     if chkrow == None:
@@ -153,45 +168,46 @@ def main():
                             dbc.execute("INSERT INTO SURVEY_BDY \
                                         (SB_HDR, SB_SEQ, SB_TYPE, SB_TITLE, SB_DESC, SB_LABEL, SB_MIN, \
                                         SB_MAX, SB_BTN_1, SB_BTN_2, SB_BTN_3) \
-                                VALUES ('" + row['SB_HDR'] + "', '" \
-                                    + row['SB_SEQ'] + "', '" \
+                                VALUES (" + row['SB_HDR'] + ", " \
+                                    + row['SB_SEQ'] + ", '" \
                                     + row['SB_TYPE'] + "', '" \
                                     + row['SB_TITLE'] + "', '" \
                                     + row['SB_DESC'] + "', '" \
-                                    + row['SB_LABEL'] + "', '" \
-                                    + row['SB_MIN'] + "', '" \
-                                    + row['SB_MAX'] + "', '" \
+                                    + row['SB_LABEL'] + "', " \
+                                    + row['SB_MIN'] + ", " \
+                                    + row['SB_MAX'] + ", '" \
                                     + row['SB_BTN_1'] + "', '" \
                                     + row['SB_BTN_2'] + "', '" \
-                                    + row['SB_BTN_3'] + "')")
+                                    + row['SB_BTN_3'] + "');")
                             dbc.commit()
                         except (sqlite3.Error):
                             dbg = "Failed to ADD Survey Detail: " + svCode + " to DB SURVEY_BDY Table."
+                            raise
                     else:
                         # Have a record match so Change it.
                         try:
                             dbc.execute("UPDATE SURVEY_BDY SET " \
+                                    + "SB_SEQ=" + row['SB_SEQ'] + "," \
                                     + "SB_TYPE='" + row['SB_TYPE'] + "'," \
                                     + "SB_TITLE='" + row['SB_TITLE'] + "'," \
                                     + "SB_DESC='" + row['SB_DESC'] + "'," \
                                     + "SB_LABEL='" + row['SB_LABEL'] + "'," \
-                                    + "SB_MIN='" + row['SB_MIN'] + "'," \
-                                    + "SB_MAX='" + row['SB_MAX'] + "'," \
+                                    + "SB_MIN=" + row['SB_MIN'] + "," \
+                                    + "SB_MAX=" + row['SB_MAX'] + "," \
                                     + "SB_BTN_1='" + row['SB_BTN_1'] + "'," \
                                     + "SB_BTN_2='" + row['SB_BTN_2'] + "'," \
                                     + "SB_BTN_3='" + row['SB_BTN_3'] + "'" \
-                                    + "WHERE (SB_HDR='" + row['SB_HDR'] + "' " \
-                                                + "AND SB_SEQ='" + row['SB_SEQ'] + "')")
-            # SB_SEQ COULD BE A DIFFERENT VALUE NOW !!! MUST FIX THIS !!!
+                                    + "WHERE (ROWID=" + str(row['SB_ROWID']) + ");")
                             dbc.commit()
                         except (sqlite3.Error):
                             dbg = "Failed to CHANGE Survey Detail: " + svCode + " in DB SURVEY_BDY Table."
+                            raise
 
     except sqlite3.Error, e:
         # Handle Exceptions
         if dbc:
             dbc.rollback()
-        dbg = "DB Err: " + e.args[0]
+        dbg += "\nDB Err: " + e.args[0]
         
     finally:
         if dbc:

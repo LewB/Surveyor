@@ -121,11 +121,10 @@ function surveyHdr_list()
         // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
         if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
         {
-            //alert("HTTPresp: " + g_xmlhttp.responseText);
+            //alert("HTTPresp: >>>" + g_xmlhttp.responseText + "<<<");
             if (g_xmlhttp.responseText != "")
             {
                 // Call successful response function here
-                
 				// Clear HTML buffer array
                 while ( html.length > 0 )
                 {
@@ -142,6 +141,7 @@ function surveyHdr_list()
                 var pJSON = JSON.parse(g_xmlhttp.responseText);
                 for (var i = 0; i < pJSON.length; i++)
                 {
+                	//alert("Got a JSON Row for: " + pJSON[i].SH_CODE);
                 	// Set up appropriate CSS Class for Row if Selected
                 	clsSfx = "";
                 	if ( g_survey && g_survey == pJSON[i].SH_CODE )
@@ -176,7 +176,7 @@ function surveyHdr_list()
             else
             {
                 // GOT A PROCESSING ERROR
-                alert(g_xmlhttp.responseText);
+                alert("Load Header Error: " + g_xmlhttp.responseText);
                 setStatus("<h2 class=\x22err\x22>ERROR Loading User's Survey Header Data.</h2>");
             }
         }
@@ -219,7 +219,7 @@ function surveyDtl_list()
                 for (var i = 0; i < pJSON.length; i++)
                 {
                     hstr = "<tr><td class=\x22dk1\x22><input type=\x22checkbox\x22 value=\x22"
-                    			+ pJSON[i].SB_HDR + "\x22</td>";
+                    			+ pJSON[i].SB_ROWID + "\x22</td>";
                 	hstr += "<td><input type=\x22text\x22 class=\x22d_c2\x22 value=\x22" 
                 				+ pJSON[i].SB_SEQ + "\x22</td>";
                 	hstr += "<td><input type=\x22text\x22 class=\x22d_c3\x22 value=\x22" 
@@ -361,7 +361,14 @@ function svyNewRecBtn(part)
             tcell.className = chkCls; // Nice to know about this...
             itype = "checkbox";
             iclass = "";
-            new_inp.value = g_sb_hdr;
+            if ( g_sb_hdr )
+            {
+            	new_inp.value = g_sb_hdr;
+            }
+            else
+            {
+            	new_inp.value = 0;
+            }
         }
         else
         {
@@ -383,7 +390,6 @@ function svyNewRecBtn(part)
         }
     }
     trow.scrollIntoView();
-    //document.getElementById("tblBody").insertRow(-1);
 }
 // HANDLER FUNCTION FOR UPDATE ON "Save Changes" BUTTON ONCLICK EVENT
 function svyUpdRecBtn(part, mode)
@@ -425,27 +431,32 @@ function svyUpdRecBtn(part, mode)
                 							+ "Survey: " + cx_id + " from the Survey Database?");
                 	if ( rsp == true )
 	                {
-	                	// The Unique HEADER DB Row ID in first field of Child Records
+	                	// The Unique HEADER DB Row ID in first Column of Child Records
 	                	// Delete ALL Records with SB_HDR eq Value of Input Checkbox in Row
-	                	rjdata = "[{'SB_HDR':'" + cx.value + "'}]";
+	                	rjdata = "[{\x22SH_ROWID\x22:\x22" + cx.value + "\x22,\x22SH_CODE\x22:\x22" + cx_id + "\x22}]";
 	                	update_rec(part, mode, cx_id, rjdata);
+	                	if ( mode == "DEL" )
+			    		{
+			    			document.getElementById("svyDtlTblDiv").innerHTML = "";
+			    			g_survey = null;
+	                		g_sb_hdr = null;
+			    			//surveyDtl_list();
+			    		}
 	                }
 	            }
 	            else if ( part == "D" )
 	            {
-	            	var cx_id = cx.value; // The Unique Sqlite3 DB Row ID of HEADER Parent
+	            	var cx_id = cx.value; // The Unique Sqlite3 DB Row ID of Detail Rec
 	            	var svCode = document.getElementById("svyCodeTxt").innerHTML; // For Confirm Below Only
 	            	rsp = confirm("Permanently DELETE This DETAIL Record For: " 
 	            									+ "Survey: " + svCode + " from the Survey Data Base?");
 	            	if ( rsp == true )
 	                {
 		            	// SB_SEQ to complete unique key
-		            	rjdata = "[{'SB_SEQ':'" + txr[i].cells[1].firstChild.value + "'}]";
-		            	update_rec(part, mode, cx_id, rjdata);
+		            	rjdata = "[{\x22SB_ROWID\x22:\x22" + cx_id + "\x22,\x22SH_CODE\x22:\x22" + svCode + "\x22}]";
+		            	update_rec(part, mode, "", rjdata);
 		            }
 	            }
-	            
-                    //document.getElementById(tblName).deleteRow(i);
             }
         }
     }
@@ -485,7 +496,7 @@ function update_rec(part, mode, p_id, data)
         // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
         if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
         {
-            //alert("HTTPresp: " + g_xmlhttp.responseText);
+       		//alert("UPDATE HTTPresp: ->" + g_xmlhttp.responseText + "<-");
             if (g_xmlhttp.responseText == "OK\n")
             {
                 // Call successful response function here
@@ -536,14 +547,14 @@ function JSON_data(part, rows)
 	{
 		for ( var i = 0; i < rows.length; i++ )
 		{
-			data += "{\x22SB_HDR\x22:\x22" + rows[i].cells[0].firstChild.value + "\x22," 
-					+ "\x22SB_SEQ\x22:\x22" + rows[i].cells[1].firstChild.value + "\x22," 
+			data += "{\x22SB_ROWID\x22:\x22" + rows[i].cells[0].firstChild.value + "\x22," 
+					+ "\x22SB_SEQ\x22:" + rows[i].cells[1].firstChild.value + "," 
 					+ "\x22SB_TYPE\x22:\x22" + rows[i].cells[2].firstChild.value + "\x22," 
 					+ "\x22SB_TITLE\x22:\x22" + rows[i].cells[3].firstChild.value + "\x22," 
 					+ "\x22SB_DESC\x22:\x22" + rows[i].cells[4].firstChild.value + "\x22," 
 					+ "\x22SB_LABEL\x22:\x22" + rows[i].cells[5].firstChild.value + "\x22," 
-					+ "\x22SB_MIN\x22:\x22" + rows[i].cells[6].firstChild.value + "\x22," 
-					+ "\x22SB_MAX\x22:\x22" + rows[i].cells[7].firstChild.value + "\x22," 
+					+ "\x22SB_MIN\x22:" + rows[i].cells[6].firstChild.value + "," 
+					+ "\x22SB_MAX\x22:" + rows[i].cells[7].firstChild.value + "," 
 					+ "\x22SB_BTN_1\x22:\x22" + rows[i].cells[8].firstChild.value + "\x22," 
 					+ "\x22SB_BTN_2\x22:\x22" + rows[i].cells[9].firstChild.value + "\x22," 
 					+ "\x22SB_BTN_3\x22:\x22" + rows[i].cells[10].firstChild.value + "\x22}";
