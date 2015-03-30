@@ -7,8 +7,8 @@
 import cgi
 
 # enable debugging
-import cgitb
-cgitb.enable()
+#import cgitb
+#cgitb.enable()
 
 # use JSON encoding
 import json

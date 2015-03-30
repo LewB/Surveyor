@@ -31,7 +31,13 @@ function loadXMLDoc(mode, url, pstr, cbfunc)
 }
 // Use Global variable g_xmlhttp for function access to HTTP response
 // *** END AJAX - HTTP REQUEST PROCESSING CODE ***
-
+// INITIALIZE DOM ELEMENTS
+function initSurvey()
+{
+	document.getElementById("svyCodeBtn").addEventListener("click", function(){
+    	load_survey();
+	});
+}
 // HANDLER FUNCTION FOR LOGIN BUTTON ONCLICK EVENT ACTION
 function load_survey()
 {
@@ -49,7 +55,6 @@ function load_survey()
     loadXMLDoc("POST", "cgi-bin/rsp_loadsurvey.py", pstr, function()
     {
         // HTTP REQUEST CALLBACK FUNCTION
-        
         if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
         {
             //alert("RESP: " + g_xmlhttp.responseText);
@@ -57,25 +62,48 @@ function load_survey()
             {
                 // Request returns 2 Arrays of JSON Data Objects
                 var pJSON = JSON.parse(g_xmlhttp.responseText);
+                var hstr = "";
                 // Set the Survey Title
                 hstr = "<div class=\x22TitleClass\x22>" + pJSON.HEADER[0].SH_NAME + "</div>";
-                hstr += "<div class=\x22DescClass\x22>" + pJSON.HEADER[0].SH_DESC + "</div>";
-                document.getElementById("svyTitle").innerHTML = hstr;
+                hstr += "<br><div class=\x22DescClass\x22>" + pJSON.HEADER[0].SH_DESC + "</div><br>";
+                document.getElementById("svyTitleDiv").innerHTML = hstr;
                 // Set the Survey Body Questions
                 var html = [];
                 for (var i = 0; i < pJSON.BODY.length; i++)
                 {
                     r = pJSON.BODY[i];
                     // Build the DOM HTML Code
+                    hstr = "<form class=\x22svyFormOpen\x22>";
+                    hstr += "<span class=\x22svyItmTitle\x22>" + r.SB_DESC + "</span><br>";
+                    hstr += "<input type=HIDDEN name=\x22SUBJECT\x22 value=\x22" + r.SB_TITLE + "\x22>";
+                    hstr += "<span class=\x22svyItmLabel\x22>" + r.SB_LABEL + "</span>";
                     switch (r.SB_TYPE)
                     {
-                    case "default":
-                    case "H_Radio":
-                        //hstr = "<form name=\x22d" + i + "\x22>";
-                        hstr = "<form class=\x22svyFormOpen\x22>";
-                        hstr += "<span class=\x22srvItmTitle\x22>" + r.SB_DESC + "</span><br>";
-                        hstr += "<input type=HIDDEN name=\x22SUBJECT\x22 value=\x22" + r.SB_TITLE + "\x22>";
-                        hstr += "<span class=\x22srvItmLabel\x22>" + r.SB_LABEL + "</span>&nbsp";
+                    case "V_Radio":
+                    	hstr += "<br>";
+                        var r_min;
+                        var r_max;
+                        (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
+                        (r.SB_MAX > 10) ? r_max = 10 : r_max = r.SB_MAX;
+                        if (r_min <= r_max ) // safety precaution - check upon data entry
+                        {
+                            for (var j = r.SB_MIN; j <= r.SB_MAX; j++)
+                            {
+                                if (j < 10 )
+                               	{
+                               		hstr += "&nbsp&nbsp";
+                               	}
+                                hstr += j + ":&nbsp<input type=RADIO name=\x22RATING\x22 value=" + j + "><br>";
+                            }
+                        }
+                        hstr += "<br><button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
+                        hstr += "<br><br><output name=\x22STATUS\x22 class=\x22svyPostedTxt\x22 value=\x22Ready\x22>Ready</output>";
+                        hstr += "<input type=HIDDEN name=\x22SURVEY\x22 value=\x22" + lscd + "\x22>";
+                        hstr += "</form><br><br>";
+                        html.push(hstr);
+                    	break;
+                    default: // case "H_Radio":"
+                        hstr += "&nbsp";
                         var r_min;
                         var r_max;
                         (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
@@ -92,12 +120,10 @@ function load_survey()
                         hstr += "<input type=HIDDEN name=\x22SURVEY\x22 value=\x22" + lscd + "\x22>";
                         hstr += "</form><br>";
                         html.push(hstr);
-                        break;
-                    default:
                     }
                 }
                 // Clear Code Input DOM div
-                document.getElementById("svyCodeDiv").innerHTML = "";
+                document.getElementById("svyCodeDiv").style.display = "none";
                 // Insert Survey Body div HTML
                 //alert("HTML: " + html.join("\n"));
                 document.getElementById("svyBodyDiv").innerHTML = html.join("\n");
@@ -110,6 +136,7 @@ function load_survey()
         }
     });
 }
+// SURVEY POST BUTTON EVENT HANDLER
 function post_it(dbtn)
 {
     var form = dbtn.parentNode;

@@ -1,10 +1,12 @@
 /* CSS file for index.html. */
-
+/*
+ ****** GENERAL HTML BODY ELEMENTS *******
+ */
 body {
   margin-top: 15px;
   margin-left: 50px;
   margin-right: 50px;
-  background-color: lightcyan;
+  background-color: #F2F2F2;
 }
 
 h2 {
@@ -16,31 +18,93 @@ p {
 }
 
 form {
-  width: 600px;
+  width: auto;
   border: 1px solid black;
   padding: 10px;
 }
-form.svyFormOpen {
-  background-color: white;
-}
-form.svyFormPosted {
-  background-color: #F2F2F2;
-}
 
+/*
+ ******* SURVEY TITLE AND DEXCRIPTION HEADERS ******
+ */
 div.TitleClass {
-  width: 600px;
-  border: 1px solid black;
-  background-color: #F2F2F2;
+  width: auto;
+  background-color: transparent;
+  border: 2px transparent;
+  border-radius: 15px;
   padding: 5px;
   text-align: center;
   font-weight: bold;
+  font-size: 150%;
+}
+div.DescClass {
+  width: auto;
+  height: 20px;
+  background-color: transparent;
+  border: 2px transparent;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 125%;
 }
 
-div.DescClass {
-  width: 600px;
-  height: 20px;
-  border: 1px solid black;
-  background-color: yellow;
+/*
+ ****** SURVRY CODE ENTRY DIALOG ******
+ */
+div#svyCodeDiv {
+  position: relative;
+  top: 100px;
+  display: block;
+  margin: 0 auto;
+  width: 300px;
+  background-color: #B2FFFF;
+  border: 2px transparent;
+  border-radius: 15px;
+  box-shadow: 10px 20px 30px lightblue;
+}
+form#svyCodeFrm {
+  width: auto;
+  height: auto;
+  border: none;
+  background-color: transparent;
+}
+form#svyCodeFrm > p {
+  position: relative;
+  display: block;
+  padding-left: 0;
   text-align: center;
+  font-weight: bold;
   color: black;
+}
+button#svyCodeBtn {
+  display: block;
+  margin: 0 auto;
+  background-color: transparent;
+  border-color: transparent;
+  font-weight: bold;
+  color: rgba(0,0,0,0.65);
+}
+button#svyCodeBtn:hover {
+  color: rgba(0,0,0,1.0);
+}
+
+/*
+ ******* DYNAMIC SURVEY FORM ELEMENTS ********
+ */
+form.svyFormOpen, form.svyFormPosted {
+  position: relative;
+  display: block;
+  padding-left: 0;
+  border: 2px transparent;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+  color: rgba(0,0,0,1.0);
+  background-color: white;
+}
+form.svyFormPosted {
+  background-color: #E8E8E8;
+  color: rgba(0,0,0,0.3);
+}
+form > span.svyItmTitle {
+  font-size: 125%;
+  font-style: italic;
 }

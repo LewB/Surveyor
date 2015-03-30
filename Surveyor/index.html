@@ -16,20 +16,23 @@ MODIFICATION HISTORY:
 ********************************************************
 -->
 <head>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable:no;">
 <link rel="stylesheet" type="text/css" href="css/index.css">
 <script type="text/javascript" src="js/index.js"></script>
+<script>window.onload = initSurvey;</script>
+
 <title>Python Survey Response Processor</title>
 </head>
 <body>
-<div id="svyTitle">
-    <h2>START A SURVEY</h2>
-</div>
 <div id="svyCodeDiv">
-<form id="svyCodeFrm">
-    Code:&nbsp;<input type="text" id="svyCodeInp" autofocus value="">
-    <br><br>
-    <button type="button" onclick="load_survey()">Start Survey</button>
-</form>
+	<form id="svyCodeFrm">
+		<p>START A SURVEY</p>
+	    Survey Code:&nbsp;<input type="text" id="svyCodeInp" autofocus value="">
+	    <br><br>
+	    <button type="button" id="svyCodeBtn">START</button>
+	</form>
+</div>
+<div id="svyTitleDiv">
 </div>
 <br>
 <div id="svyBodyDiv">
