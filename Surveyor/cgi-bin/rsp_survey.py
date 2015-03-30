@@ -158,8 +158,7 @@ def main():
                             dbg = "Failed to CHANGE Survey: " + row['SH_CODE'] + " in DB SURVEY_HDR Table."
                             raise
                 elif svPart == "BODY":
-                    csr.execute("SELECT SB_HDR, SB_SEQ FROM SURVEY_BDY WHERE (SB_HDR=" + row['SB_HDR'] + " \
-                                                            AND SB_SEQ=" + row['SB_SEQ'] + ");")
+                    csr.execute("SELECT SB_HDR, SB_SEQ FROM SURVEY_BDY WHERE (ROWID=" + row['SB_ROWID'] + ");")
                     # get first DB table row from cursor after select
                     chkrow = csr.fetchone()
                     if chkrow == None:
@@ -181,12 +180,13 @@ def main():
                                     + row['SB_BTN_3'] + "');")
                             dbc.commit()
                         except (sqlite3.Error):
-                            dbg = "Failed to ADD Survey Detail: " + svCode + " to DB SURVEY_BDY Table."
+                            dbg = "Failed to ADD Survey Detail to DB SURVEY_BDY Table."
                             raise
                     else:
                         # Have a record match so Change it.
                         try:
                             dbc.execute("UPDATE SURVEY_BDY SET " \
+                                    + "SB_HDR=" + row['SB_HDR'] + "," \
                                     + "SB_SEQ=" + row['SB_SEQ'] + "," \
                                     + "SB_TYPE='" + row['SB_TYPE'] + "'," \
                                     + "SB_TITLE='" + row['SB_TITLE'] + "'," \
@@ -197,10 +197,10 @@ def main():
                                     + "SB_BTN_1='" + row['SB_BTN_1'] + "'," \
                                     + "SB_BTN_2='" + row['SB_BTN_2'] + "'," \
                                     + "SB_BTN_3='" + row['SB_BTN_3'] + "'" \
-                                    + "WHERE (ROWID=" + str(row['SB_ROWID']) + ");")
+                                    + "WHERE (ROWID=" + row['SB_ROWID'] + ");")
                             dbc.commit()
                         except (sqlite3.Error):
-                            dbg = "Failed to CHANGE Survey Detail: " + svCode + " in DB SURVEY_BDY Table."
+                            dbg = "Failed to CHANGE Survey Detail in DB SURVEY_BDY Table."
                             raise
 
     except sqlite3.Error, e:

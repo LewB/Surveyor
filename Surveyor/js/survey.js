@@ -274,6 +274,7 @@ function headerTableRowClick(row)
 				// Store Current Survey ROWID and Name
 				if ( j == 0 )
 				{
+					// Very IMPORTANT - Used to Update Body Detail Records
 					g_sb_hdr = rc[j].firstChild.value;
 				}
 			    if ( j == 1 )
@@ -490,7 +491,7 @@ function update_rec(part, mode, p_id, data)
     urldata.push(encodeURIComponent("SVMODE") + "=" + encodeURIComponent(mode));
     urldata.push(encodeURIComponent("SVDATA") + "=" + encodeURIComponent(data));
     pstr = urldata.join('&').replace(/%20/g, '+');
-    //alert("UPDATE pstr: " + pstr);
+    alert("UPDATE pstr: " + pstr);
     loadXMLDoc("POST", "/cgi-bin/rsp_survey.py", pstr, function()
     {
         // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
@@ -548,13 +549,14 @@ function JSON_data(part, rows)
 		for ( var i = 0; i < rows.length; i++ )
 		{
 			data += "{\x22SB_ROWID\x22:\x22" + rows[i].cells[0].firstChild.value + "\x22," 
-					+ "\x22SB_SEQ\x22:" + rows[i].cells[1].firstChild.value + "," 
+					+ "\x22SB_HDR\x22:\x22" + g_sb_hdr + "\x22," 
+					+ "\x22SB_SEQ\x22:\x22" + rows[i].cells[1].firstChild.value + "\x22," 
 					+ "\x22SB_TYPE\x22:\x22" + rows[i].cells[2].firstChild.value + "\x22," 
 					+ "\x22SB_TITLE\x22:\x22" + rows[i].cells[3].firstChild.value + "\x22," 
 					+ "\x22SB_DESC\x22:\x22" + rows[i].cells[4].firstChild.value + "\x22," 
 					+ "\x22SB_LABEL\x22:\x22" + rows[i].cells[5].firstChild.value + "\x22," 
-					+ "\x22SB_MIN\x22:" + rows[i].cells[6].firstChild.value + "," 
-					+ "\x22SB_MAX\x22:" + rows[i].cells[7].firstChild.value + "," 
+					+ "\x22SB_MIN\x22:\x22" + rows[i].cells[6].firstChild.value + "\x22," 
+					+ "\x22SB_MAX\x22:\x22" + rows[i].cells[7].firstChild.value + "\x22," 
 					+ "\x22SB_BTN_1\x22:\x22" + rows[i].cells[8].firstChild.value + "\x22," 
 					+ "\x22SB_BTN_2\x22:\x22" + rows[i].cells[9].firstChild.value + "\x22," 
 					+ "\x22SB_BTN_3\x22:\x22" + rows[i].cells[10].firstChild.value + "\x22}";
