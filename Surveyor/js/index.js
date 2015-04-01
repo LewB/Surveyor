@@ -74,11 +74,30 @@ function load_survey()
                     r = pJSON.BODY[i];
                     // Build the DOM HTML Code
                     hstr = "<form class=\x22svyFormOpen\x22>";
-                    hstr += "<span class=\x22svyItmTitle\x22>" + r.SB_DESC + "</span><br>";
+                    if (r.SB_DESC && r.SB_DESC != "None")
+                    {
+                    	hstr += "<span class=\x22svyItmTitle\x22>" + r.SB_DESC + "</span><br>";
+                    }
                     hstr += "<input type=HIDDEN name=\x22SUBJECT\x22 value=\x22" + r.SB_TITLE + "\x22>";
                     hstr += "<span class=\x22svyItmLabel\x22>" + r.SB_LABEL + "</span>";
                     switch (r.SB_TYPE)
                     {
+                    case "Range": // Should Create a Horizontal 'Slider'
+                        hstr += "&nbsp";
+                        var r_min;
+                        var r_max;
+                        (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
+                        (r.SB_MAX > 10) ? r_max = 10 : r_max = r.SB_MAX;
+                        if (r_min <= r_max ) // safety precaution - check upon data entry
+                        {
+                            hstr += "&nbsp" + r_min + "&nbsp<input type=RANGE name=\x22RANGE\x22 min=\x22" + r_min + "\x22 max=\x22" + r_max + "\x22>&nbsp" + r_max + "&nbsp";
+                        }
+                        hstr += "<button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
+                        hstr += "&nbsp&nbsp<output name=\x22STATUS\x22 class=\x22svyPostedTxt\x22 value=\x22Ready\x22>Ready</output>";
+                        hstr += "<input type=HIDDEN name=\x22SURVEY\x22 value=\x22" + lscd + "\x22>";
+                        hstr += "</form><br>";
+                        html.push(hstr);
+                        break;
                     case "V_Radio":
                     	hstr += "<br>";
                         var r_min;
@@ -93,7 +112,7 @@ function load_survey()
                                	{
                                		hstr += "&nbsp&nbsp";
                                	}
-                                hstr += j + ":&nbsp<input type=RADIO name=\x22RATING\x22 value=" + j + "><br>";
+                                hstr += j + "&nbsp<input type=RADIO name=\x22RATING\x22 value=" + j + "><br>";
                             }
                         }
                         hstr += "<br><button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
@@ -112,7 +131,7 @@ function load_survey()
                         {
                             for (var j = r.SB_MIN; j <= r.SB_MAX; j++)
                             {
-                                hstr += j + "<input type=RADIO name=\x22RATING\x22 value=" + j + ">&nbsp";
+                                hstr += j + "&nbsp<input type=RADIO name=\x22RATING\x22 value=" + j + ">&nbsp";
                             }
                         }
                         hstr += "<button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
@@ -141,6 +160,7 @@ function post_it(dbtn)
 {
     var form = dbtn.parentNode;
     var addl = "";
+    var pname = "";
     var pstr = "";
     var el_sts = form.elements["STATUS"];
 
@@ -148,23 +168,40 @@ function post_it(dbtn)
     {
         var el = form.elements[i];
         addl = "";
-        if (el.name == "SUBJECT") {addl = "F";}
-        if (el.name == "RATING")
-        {
-            el.disabled = true;
-            //alert("CHK: " + el.checked + " VAL: " + el.value);
-            if (el.checked) {addl = "Y";}
-        }
+        pname = el.name;
         //alert("NAME: " + el.name);
-        if (el.name == "STATUS") {el.value = "Pending";}
-        if (el.name == "SURVEY") {addl = "Y";}
+        switch (el.name)
+        {
+        	case "SUBJECT":
+        		 addl = "F";
+        		 break;
+        	case "RATING":
+            	el.disabled = true;
+            	//alert("CHK: " + el.checked + " VAL: " + el.value);
+            	if (el.checked)
+            	{
+            		addl = "Y";
+            	}
+        	case "RANGE":
+        	 	pname = "RATING";
+        	 	addl = "Y";
+        	 	break;
+        	case "STATUS":
+        		el.value = "Pending";
+        		break;
+        	case "SURVEY":
+        		addl = "Y";
+        		break;
+        	default:
+        		break;
+        }
         if (addl)
         {
             if (addl != "F")
             {
                 pstr += "&";
             }
-            pstr += el.name + "=" + el.value;
+            pstr += pname + "=" + el.value;
         }
     }
     dbtn.disabled = true;
