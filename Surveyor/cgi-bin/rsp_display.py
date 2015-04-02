@@ -15,6 +15,14 @@ import sqlite3
 
 from time import asctime, localtime
 
+# Error Class For File not Found
+class noDBerror(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return repr(self.msg)
+
+# The MAIN Program Module
 def main():
     
     fs = cgi.FieldStorage()
@@ -23,15 +31,18 @@ def main():
     
     print "Content-Type: text/html; charset=utf-8"
     print
-    print "<!DOCTYPE html><html><head><title>Survey Response</title>"
+    print "<!DOCTYPE html>"
+    print "<html>"
+    print "<head>"
     print '''<link rel="stylesheet" type="text/css" href="../css/display.css"></head>'''
-    print "<body><h2>Current Responses for Survey: " + svCode + "</h2>"
+    print "<title>Survey " + svCode + " Responses</title>"
+    print "<body>"
+    print "<h2>Current Responses for Survey: " + svCode + "</h2>"
     
     try:
         if os.path.exists(surv) == False:
-            print "<br>We're Sorry, Survey Database " + svCode + " Does Not Exist.<br>"
-            print "</body></html>"
-            raise NoDBerr("Database Does Not Exist.")
+            # the os function above does not raise an error, make our own
+            raise noDBerror("We're Sorry, The Database for Survey: '" + svCode + "' Cannot Be Found.")
         
         dbc = sqlite3.connect(surv)
         dbc.row_factory = sqlite3.Row
@@ -68,12 +79,13 @@ def main():
         print '<tr><td colspan="4" class="total">'  + cursub + " Total: " + str(ctot) + " Count: " + str(cnt) + " Average Score: " + str(cavg) + "</td></tr>"
         print "</table>"
     
-    except sqlite3.Error, e:
+    except sqlite3.Error as e:
         print "Sqlite3 Err: " + e.args[0]
         print "<br><br>"
-    except noDBerr:
-        print "Database for Survey Code: " + surv + " Does Not Exist."
-        print "<br><br>"
+    except noDBerror as e:
+        print "<p style='font-size:125%;font-wight:bold;color:red;''>"
+        print e.msg
+        print "</p>"
         
     finally:
         print "<br><em>*** DISPLAY COMPLETE ***</em><br><br>&nbsp&nbsp&nbsp&nbsp"

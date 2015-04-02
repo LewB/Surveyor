@@ -25,7 +25,6 @@ function setitup()
     	window.history.replaceState({logid: g_user, 
     						 search: g_urlSearch
     						 }, document.title, document.location.href);
-    	//window.location = "/html/admin.html" + g_urlSearch;
     	view_responses();
   	});
   	// SET LISTENER FOR SETUP SURVEYS BUTTON
@@ -174,6 +173,7 @@ function view_responses()
 	var svCode = prompt("Enter Survey Code: ");
 	
 	// Create a window to display it in
+	// Could change 2nd argument to make it detachable etc.
 	dwin = window.open("", "");
 	
 	// Build Survey Header Data Table
