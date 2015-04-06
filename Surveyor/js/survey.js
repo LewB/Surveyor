@@ -491,7 +491,7 @@ function update_rec(part, mode, p_id, data)
     urldata.push(encodeURIComponent("SVMODE") + "=" + encodeURIComponent(mode));
     urldata.push(encodeURIComponent("SVDATA") + "=" + encodeURIComponent(data));
     pstr = urldata.join('&').replace(/%20/g, '+');
-    alert("UPDATE pstr: " + pstr);
+    //alert("UPDATE pstr: " + pstr);
     loadXMLDoc("POST", "/cgi-bin/rsp_survey.py", pstr, function()
     {
         // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
