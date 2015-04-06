@@ -7,8 +7,8 @@ import cgi
 import time
 
 # enable debugging
-import cgitb
-cgitb.enable()
+#import cgitb
+#cgitb.enable()
 
 # use internal sqlite3 database
 import sqlite3

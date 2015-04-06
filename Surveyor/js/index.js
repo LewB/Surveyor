@@ -182,6 +182,7 @@ function post_it(dbtn)
             	{
             		addl = "Y";
             	}
+            	break;
         	case "RANGE":
         	 	pname = "RATING";
         	 	addl = "Y";
