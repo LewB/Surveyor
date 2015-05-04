@@ -1,0 +1,178 @@
+/* CSS file for Admin.html. */
+
+body {
+  margin-top: 15px;
+  margin-left: 50px;
+  margin-right: 50px;
+  background-color: LightGreen;
+}
+
+h2 {
+  text-align: left;
+}
+
+h2.err {
+  color: red;
+}
+
+p {
+  padding-left: 25px;
+}
+
+span#currUser {
+  text-align: left;
+  color: blue;
+}
+
+div#fld_data_hdr {
+  width: 790px;
+  border: 1px solid black;
+  background-color: #F2F2F2;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+div#userDataDiv {
+  width: 800px;
+  height: 353px;
+  border: 1px solid black;
+  background-color: #DCDCDC;
+  color: black;
+}
+div#tblHdrDiv {
+  width: 800px;
+  height: 20px;
+  border: none;
+  background-color: yellow;
+  color: black;
+}
+table#tblHdr {
+  width: 800px;
+  background-color: blue;
+  color: white;
+  text-align: center;
+  font-style: bold;
+  border-collapse: collapse;
+}
+
+td {
+  position: relative;
+}
+
+.c1 {
+  width: 30px;
+  text-align: center;
+}
+.c2 {
+  width: 200px;
+}
+.c3 {
+  width: 200px;
+}
+.c4 {
+  width: 370px;
+}
+
+div#tblBodyDiv {
+  height: 303px; /* Needs to be 50px less than div#userDataDiv */
+  width: 800px;
+  background-color: #DCDCDC;
+  border: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+}
+table#tblBody {
+  width: 800px;
+  background-color: #DCDCDC;
+  border-spacing: 3px;
+  /* position: relative; */
+}
+input.Tc2, input.c2, input.c3, input.c4, input.cs2, input.cs3, input.cs4 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0%;
+  border: none;
+  text-indent: 0.5em;
+  background-color: #F2F2F2;
+}
+input.Tc2:hover, input.c3:hover, input.c4:hover, input.cs3:hover, input.cs4:hover {
+  background-color: white;
+}
+input.Tc2:focus, input.c3:focus, input.c4:focus , input.cs3:focus, input.cs4:focus {
+  background-color: white;
+}
+input.cs2, input.cs3, input.cs4 {
+  background-color: lightcyan;
+}
+
+.stdTab {
+  color: #000000;
+  background: #DCDCDC;
+  border: 1px solid Black;
+  border-bottom: 0;
+  padding: 2px 5px 2px 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.stdTab:active {
+  background: lightcyan;
+}
+
+.stdTab:hover:not([disabled]) {
+  background: #F2F2F2;
+}
+
+.stdTab[disabled] {
+  color:rgb(100, 100, 100);
+  border: 1px solid transparent;
+  cursor: default;
+}
+
+.stdBtn {
+  color: #000000;
+  background: #DCDCDC;
+  border: 1px solid transparent;
+  padding: 2px 5px 2px 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.stdBtn: active {
+  background: lightcyan;
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.stdBtn:hover:not([disabled]) {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.stdBtn[disabled] {
+  color:rgb(100, 100, 100);
+  border: 1px solid transparent;
+  cursor: default;
+}
+
+div#tblBtnDiv {
+  /* margin-top: 10px; */
+  width: 760px;
+  height: 20px;
+  border: none;
+  margin-left: 30px;
+  background-color: #DCDCDC;
+  color: black;
+  padding: 5px;
+}
+
+div.status {
+  width: 790px;
+  border: 1px solid black;
+  background-color: yellow;
+  padding: 5px;
+}

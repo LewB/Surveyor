@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+******************************************************
+login.html
+******************************************************
+USAGE:
+$ cd \home\<somedir> (directory where home html file is)
+$ c:\Python27\python -m CGIHTTPServer 8000
+or
+Run batch file StartWebServer.bat in this file's directory
+then
+point your browser to: http://127.0.0.1:8000/login.html
+to load this web page.
+******************************************************
+DESCRIPTION: 
+This file puts up a login prompt form and asks for a login/password
+credential pair. When the login button is pressed, the credential data
+is passed via an AJAX HTTP request to the "rsp-login.py" program
+to verify the provided credentials. If the credentials are valid,
+control will be passed to the administration page (admin.html),
+otherwise an error message is displayed and the credentials can be
+submitted again.
+**********************************************************************
+MODIFICATION HISTORY:
+02-17-2015-ALB: File Created.
+02-22-2015-ALB: Renamed files to use new versions and new directory
+				structure.
+03-05-2015-ALB: Added Navigation buttons and window "onload" event
+				handler to setup the DOM.
+**********************************************************************
+-->
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="/css/login.css">
+	<script type="text/javascript" src="/js/common_lib.js"></script>
+	<script type="text/javascript" src="/js/login.js"></script>
+	
+	<script>window.onload = setitup;</script>
+	<title>Python Survey Manager Login</title>
+</head>
+<body>
+	<h1>Python Survey Manager</h1>
+	<div id="inpDiv">
+		<h2>Admin Login Screen</h2>
+		<br><br>
+		LOGIN ID:&nbsp;<input type="text" name="LOGID" id="loginID" autofocus value="">
+		<br><br>
+		PASSWORD:&nbsp;<input type="password" id="loginPW" value="">
+		<br><br>
+		<button type="button" id="loginBtn">Login</button>
+	</div>
+	<br>
+	<div id="navBtnDiv" class="hidden">
+		<h2>Admin Navigation Screen</h2>
+		<br><br>
+		Current User:&nbsp;<span id="logUserID">None</span>
+		<br><br>
+	    <button type="button" id="navRespBtn">View Response Data</button>
+	    <button type="button" id="navSurvBtn">Setup Surveys</button>
+	    <button type="button" id="navUserBtn">Admin Users</button>
+	    <button type="button" id="logoutBtn">Log Out</button>
+	</div>
+	<div id="stsDiv">
+		<h2>You Must Login To Proceed.</h2>
+	</div>
+</body>
+</html>
