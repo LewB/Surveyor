@@ -61,3 +61,6 @@ THIS COMPONENT REQUIRES (in http root):
 
 ### html/survey.html
 
+## CHANGE LOG
+05-04-15 ALB Moved online GitHub repo up a directory level
+			 Created new local eGit clone repository
