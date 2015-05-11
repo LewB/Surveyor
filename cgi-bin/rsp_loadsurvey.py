@@ -23,6 +23,7 @@ def main():
     svCode = fs.getvalue("SURVEY")
     svPart = fs.getvalue("SVPART")
     svOwner = fs.getvalue("SVOWNER")
+    
     if svCode == None:
        svCode = "*"
     if svPart == None:
@@ -35,6 +36,30 @@ def main():
         # connect to the database
         dbc = sqlite3.connect("data/rsp-survey.db")
         dbc.row_factory = sqlite3.Row
+        # check for SURVEY data tables
+        dbc.execute('''CREATE TABLE IF NOT EXISTS SURVEY_HDR
+                 (`SH_CODE` TEXT     NOT NULL UNIQUE DEFAULT 'SRV0001',
+                  `SH_OWNER` TEXT    NOT NULL DEFAULT 'Admin',
+                  `SH_STATUS` TEXT   NOT NULL DEFAULT 'Ready',
+                  `SH_TYPE` TEXT     NOT NULL DEFAULT 'Default',
+                  `SH_NAME` TEXT,
+                  `SH_DESC` TEXT,
+                  `SH_SKIN` TEXT,
+                  PRIMARY KEY (`SH_CODE`));''')
+        dbc.execute('''CREATE TABLE IF NOT EXISTS SURVEY_BDY
+                 (`SB_HDR` INTEGER   NOT NULL,
+                  `SB_SEQ` INTEGER   NOT NULL,
+                  `SB_TYPE` TEXT     NOT NULL DEFAULT 'Default',
+                  `SB_TITLE` TEXT    NOT NULL,
+                  `SB_DESC` TEXT,
+                  `SB_LABEL` TEXT,
+                  `SB_MIN` INTEGER   DEFAULT 1,
+                  `SB_MAX` INTEGER   DEFAULT 5,
+                  `SB_BTN_1` TEXT    DEFAULT 'Submit',
+                  `SB_BTN_2` TEXT,
+                  `SB_BTN_3` TEXT,
+                  PRIMARY KEY (`SB_HDR`, `SB_SEQ`));''')
+        dbc.commit()
         # execute SQL SELECT to Create JSON Data
         csr = dbc.cursor()
         if svCode == "*":
@@ -42,6 +67,7 @@ def main():
         else:
             csr.execute("SELECT ROWID AS SH_ROWID,* FROM SURVEY_HDR WHERE SH_CODE='" + svCode + "';")
         rows = csr.fetchall()
+        print rows
         if rows != None:
             # Convert to JSON Data
             hdr_json = json.dumps( [dict(idx) for idx in rows] )
@@ -67,11 +93,14 @@ def main():
                 print bdy_json
             if svPart == "BOTH":
                 print '{"HEADER":' + hdr_json + ',"BODY":' + bdy_json + '}'
-
+            
     except sqlite3.Error, e:
         # Handle Exceptions
         if dbc:
             dbc.rollback()
+        print "Content-Type: text/plain"
+        print
+        print "ERR: " + e.args[0]
         
     finally:
         if dbc:

@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import time
+import os
 
 # use the cgi library
 import cgi
@@ -26,6 +27,12 @@ def main():
 
     dbc = None
     try:
+        # check for '/data' directory - create if it does not exist
+        if os.path.exists("data") == False:
+            # Create the data directory:
+            # In the future this location should be made configurable
+            os.mkdir("data")
+        # Create and/or Open the admin database
         dbc = sqlite3.connect("data/rsp-admin.db")
         try:
             # execute SQL SELECT on CGI values
@@ -34,7 +41,7 @@ def main():
             # get first DB table row from cursor after select
             chkrow = csr.fetchone()
         except (sqlite3.Error):
-            # check for hard coded initial values to create and access database table
+            # check for hard coded initial login values to create and access database table
             if logid == "Admin" and logpw == "password":
                 try:
                     dbc.execute('''CREATE TABLE IF NOT EXISTS LOGIN
@@ -49,9 +56,14 @@ def main():
                     if dbc:
                         dbc.rollback()
                     dbg = "ERR:Failed to Create Initial DB Table: " + e.args[0]
+                else:
+                    # Read the new record again to load and verify it
+                    csr.execute("SELECT * FROM LOGIN WHERE ID='" + logid + "' AND PW='" + logpw + "'")
+                    # get first DB table row from cursor after select
+                    chkrow = csr.fetchone()
             else:
                 dbg = "ERR:BAD INITIAL CREDENTIALS=[LOGID=" + logid + "&LOGPW=" + logpw + "]."
-        else:
+        if dbg == "OK":
             if chkrow == None:
                 dbg = "ERR:No Match for Login Credentials Found."
             else:
@@ -74,7 +86,7 @@ def main():
         # Handle Exceptions
         if dbc:
             dbc.rollback()
-        dbg = "ERR: Admin DB: " + e.args[0]
+        dbg = "ERR: Admin DB - " + e.args[0]
         
     finally:
         # Close the database

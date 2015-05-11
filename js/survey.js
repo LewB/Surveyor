@@ -16,6 +16,8 @@ var g_sb_hdr;
 // CHECK FOR VALID LOGIN
 function survey_login()
 {
+	// set status message
+	setStatus("Loading Survey Data, Please Wait......");
 	check_login("url", location.search, survey_init);
 	// survey_init() will be called asynchronously by HTTPRequest
 	// after it Returns from processing the request
@@ -80,7 +82,10 @@ function survey_init(result)
     	surveyDtl_list();
   	});
   	// Display Available Surveys to Manage
-	surveyHdr_list();
+	if ( result == true )
+	{
+		surveyHdr_list();
+	}
 }
 // Load Surveys from Database
 function surveyHdr_list()
@@ -112,30 +117,31 @@ function surveyHdr_list()
 		+ "<td>B1</td><td>B2</td><td>B3</td></tr>");
 	html.push("</table>");
 	document.getElementById("svyDtlHdrDiv").innerHTML = html.join("\n");
-	
+	// Clear HTML buffer array
+    while ( html.length > 0 )
+    {
+    	html.pop();
+    }
     // Build Survey Header Data Table
     var pstr = "SURVEY=*&SVPART=HEADER&SVOWNER=" + g_user;
     
+    alert( "Calling loadsurvey with: " + pstr);
     loadXMLDoc("POST", "/cgi-bin/rsp_loadsurvey.py", pstr, function()
     {
-        // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
+        // HTTP POST REQUEST ASYNCHRONOUS CALLBACK FUNCTION
         if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
         {
-            //alert("HTTPresp: >>>" + g_xmlhttp.responseText + "<<<");
-            if (g_xmlhttp.responseText != "")
+            // Build header table
+            html.push("<table id=\x22svyHdrTblBody\x22>");
+            html.push("<colgroup><col class=\x22ck1\x22><col class=\x22h_c2\x22>"
+            	+ "<col class=\x22h_c3\x22><col class=\x22h_c4\x22><col class=\x22h_c5\x22>"
+            	+ "<col class=\x22h_c6\x22><col class=\x22h_c7\x22><col class=\x22h_c8\x22>"
+            	+ "</colgroup>");
+            
+            //alert("HDR HTTPRESP:>>>>" + g_xmlhttp.responseText + "<<<<");
+         	// Call successful response function here
+            if (g_xmlhttp.responseText[0] != "E")
             {
-                // Call successful response function here
-				// Clear HTML buffer array
-                while ( html.length > 0 )
-                {
-                	html.pop();
-                }
-                // Build header table
-                html.push("<table id=\x22svyHdrTblBody\x22>");
-                html.push("<colgroup><col class=\x22ck1\x22><col class=\x22h_c2\x22>"
-                	+ "<col class=\x22h_c3\x22><col class=\x22h_c4\x22><col class=\x22h_c5\x22>"
-                	+ "<col class=\x22h_c6\x22><col class=\x22h_c7\x22><col class=\x22h_c8\x22>"
-                	+ "</colgroup>");
                 // Request returns JSON Data Strings
                 var clsPfx = "";
                 var pJSON = JSON.parse(g_xmlhttp.responseText);
@@ -153,7 +159,7 @@ function surveyHdr_list()
                     		+ pJSON[i].SH_ROWID + "\x22</td>";
                 	hstr += "<td><input type=\x22text\x22 class=\x22h_c2" + clsSfx + "\x22 value=\x22" 
                 				+ pJSON[i].SH_CODE + "\x22</td>";
-                	hstr += "<td><input type=\x22text\x22 READONLY class=\x22h_ro" + clsSfx + "\x22 value=\x22" 
+                	hstr += "<td><input type=\x22text\x22 DISABLED class=\x22h_ro" + clsSfx + "\x22 value=\x22" 
                 				+ pJSON[i].SH_OWNER + "\x22</td>";
                     hstr += "<td><input type=\x22text\x22 class=\x22h_c4" + clsSfx + "\x22 value=\x22" 
                     			+ pJSON[i].SH_STATUS + "\x22</td>";
@@ -167,18 +173,20 @@ function surveyHdr_list()
                     			+ pJSON[i].SH_SKIN + "\x22</td></tr>";
                     html.push(hstr);
                 }
-                html.push("</table>");
-                // Load the HTML array into the DOM table body div
-                //alert("HTML:\n"+html.join("\n"));
-                document.getElementById("svyHdrTblDiv").innerHTML = html.join("\n");
-                //setStatus("Enter Data and Select and Action.");
+                setStatus("Enter Data and Select and Action.");
             }
             else
             {
                 // GOT A PROCESSING ERROR
-                alert("Load Header Error: " + g_xmlhttp.responseText);
+                alert("Load Survey Header Error: " + g_xmlhttp.responseText);
                 setStatus("<h2 class=\x22err\x22>ERROR Loading User's Survey Header Data.</h2>");
             }
+            // Always finish creating the table
+            html.push("</table>");
+            // Load the HTML array into the DOM table body div
+            //alert("HTML:\n"+html.join("\n"));
+            document.getElementById("svyHdrTblDiv").innerHTML = html.join("\n");
+            
         }
     });
 }
@@ -202,18 +210,17 @@ function surveyDtl_list()
         // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
         if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
         {
+            // Build header table
+            html.push("<table id=\x22svyDtlTblBody\x22>");
+            html.push("<colgroup><col class=\x22dk1\x22><col class=\x22d_c2\x22>" 
+            		+ "<col class=\x22d_c3\x22><col class=\x22d_c4\x22><col class=\x22d_c5\x22>" 
+            		+ "<col class=\x22d_c6\x22><col class=\x22d_c7\x22><col class=\x22d_c8\x22>" 
+            		+ "<col class=\x22d_c9\x22><col class=\x22d_c10\x22><col class=\x22d_c11\x22>" 
+            		+ "</colgroup>");
             //alert("HTTPresp: " + g_xmlhttp.responseText);
-            if (g_xmlhttp.responseText != "")
+            if (g_xmlhttp.responseText[0] != "E")
             {
                 // Call successful response function here
-                
-                // Build header table
-                html.push("<table id=\x22svyDtlTblBody\x22>");
-                html.push("<colgroup><col class=\x22dk1\x22><col class=\x22d_c2\x22>" 
-                		+ "<col class=\x22d_c3\x22><col class=\x22d_c4\x22><col class=\x22d_c5\x22>" 
-                		+ "<col class=\x22d_c6\x22><col class=\x22d_c7\x22><col class=\x22d_c8\x22>" 
-                		+ "<col class=\x22d_c9\x22><col class=\x22d_c10\x22><col class=\x22d_c11\x22>" 
-                		+ "</colgroup>");
                 // Request returns JSON Data Strings
                 var pJSON = JSON.parse(g_xmlhttp.responseText);
                 for (var i = 0; i < pJSON.length; i++)
@@ -242,11 +249,7 @@ function surveyDtl_list()
                     			+ pJSON[i].SB_BTN_3 + "\x22</td></tr>";
                     html.push(hstr);
                 }
-                html.push("</table>");
-                // Load the HTML array into the DOM table body div
-                //alert("HTML:\n"+html.join("\n"));
-                document.getElementById("svyDtlTblDiv").innerHTML = html.join("\n");
-                //setStatus("Enter Data and Select and Action.");
+                setStatus("Enter Data and Select and Action.");
             }
             else
             {
@@ -254,6 +257,10 @@ function surveyDtl_list()
                 alert(g_xmlhttp.responseText);
                 setStatus("<h2 class=\x22err\x22>ERROR Loading Survey Detail Data.</h2>");
             }
+            html.push("</table>");
+            // Load the HTML array into the DOM table body div
+            //alert("HTML:\n"+html.join("\n"));
+            document.getElementById("svyDtlTblDiv").innerHTML = html.join("\n");
         }
     });
 	
@@ -316,25 +323,30 @@ function headerTableRowClick(row)
 	// Show Survey Body Detail for Selected Survey
 	surveyDtl_list();
 }
-// HANDLER FUNCTION FOR Add New User BUTTON ONCLICK EVENT
+// HANDLER FUNCTION FOR Add New Record BUTTON ONCLICK EVENT
+// Handles BOTH (H)eader and (D)etail tables - don't get confused!
 function svyNewRecBtn(part)
 {
     // Add another record line to the display table
     // part "H" = HEADER, part "D" = DETAIL
-    
+	var tblName;
+	var chkCls;
+	var clsPfx;
+	var celCnt;
+
     if ( part == "H" )
     {
-    	var tblName = "svyHdrTblBody";
-    	var chkCls = "ck1";
-    	var clsPfx = "h_c";
-    	var celCnt = 8;
+    	tblName = "svyHdrTblBody";
+    	chkCls = "ck1";
+    	clsPfx = "h_c";
+    	celCnt = 8;
     }
     else if ( part == "D" )
     {
-    	var tblName = "svyDtlTblBody";
-    	var chkCls = "dk1";
-    	var clsPfx = "d_c";
-    	var celCnt = 11;
+    	tblName = "svyDtlTblBody";
+    	chkCls = "dk1";
+    	clsPfx = "d_c";
+    	celCnt = 11;
     	if ( !g_survey )
 		{
 			alert("Must Select Survey to Create Detail for.");
@@ -349,8 +361,16 @@ function svyNewRecBtn(part)
     
     var itype = "";
     var iclass = "";
-    
-    var trow = document.getElementById(tblName).insertRow(-1);
+    var trow;
+
+    if ( document.getElementById(tblName).rows.length > 0 )
+    {
+    	trow = document.getElementById(tblName).insertRow(-1);
+    }
+    else
+    {
+    	trow = document.getElementById(tblName).insertRow(0);
+    }
 
     for (var i = 1; i <= celCnt; i++)
     {
@@ -383,6 +403,12 @@ function svyNewRecBtn(part)
         if ( iclass )
         {
         	new_inp.setAttribute("class", iclass);
+        }
+        if ( part == "H" && i == 3 )
+        {
+        	// Set value and Disable OWNER field so nothing changes
+        	new_inp.value = g_user;
+        	new_inp.disabled = true;
         }
         tcell.appendChild(new_inp);
         if (i == 2)

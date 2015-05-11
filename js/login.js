@@ -147,7 +147,7 @@ function post_login()
                 // MUST have the "?" !!!
                 g_urlSearch = "?" + encodeURIComponent(ucid + "&" + uclk);
                 g_user = lid;
-                // Set Next Location With: "/html/admin.html?" + g_urlSearch;
+                // Set Next Location With: "/html/admin.html" + g_urlSearch;
                 // SetUp navigation on Login Screen
                 document.getElementById("inpDiv").className = "hidden";
                 document.getElementById("navBtnDiv").className = "visible";
