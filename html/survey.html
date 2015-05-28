@@ -4,7 +4,7 @@
 ******************************************************
 NAME: survey.html
 ******************************************************
-USAGE:
+USAGE: Called from Main Navigation Page
 ******************************************************
 FUNCTIONAL DESCRIPTION: 
 This file defines DOM elements for the display of
@@ -12,6 +12,7 @@ the survey input screen.
 ********************************************************
 MODIFICATION HISTORY:
 02-26-2015 - File Created - ALB
+05-28-2015 - Added Standard Header and Navigation (Back) button - ALB
 
 ********************************************************
 -->
@@ -21,12 +22,18 @@ MODIFICATION HISTORY:
 <script type="text/javascript" src="/js/survey.js"></script>
 <script>window.onload = survey_login;</script>
 
-<title>Python Survey</title>
+<title>Survey Manager Setup</title>
 </head>
 <body>
-<h2>SURVEY SETUP &amp; MAINTENANCE</h2>
-Current User:&nbsp;<span id="svyUser">None</span>
+<h2>SURVEY MANAGER - Survey Setup</h2>
+<button type="button" id="svy_home_btn">Home</button>
 <br><br>
+<div id="svy_page_hdr">
+    S U R V E Y &nbsp;&nbsp; D E F I N I T I O N &nbsp;&nbsp; &amp; &nbsp;&nbsp; M A I N T E N A N C E
+    <br>
+    <span id="currUser">Current User: &nbsp; <span id="svyUser">None</span></span>
+</div>
+<br>
 <div id="svyHdrDataDiv">
     <div id="svyHdrHdrDiv">
         <!-- Dynamic Table "svyHdrHdrTbl" gets created by surveyHdr_list() here. -->

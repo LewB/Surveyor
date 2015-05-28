@@ -79,20 +79,28 @@ function load_survey()
                     	hstr += "<span class=\x22svyItmTitle\x22>" + r.SB_DESC + "</span><br>";
                     }
                     hstr += "<input type=HIDDEN name=\x22SUBJECT\x22 value=\x22" + r.SB_TITLE + "\x22>";
-                    hstr += "<span class=\x22svyItmLabel\x22>" + r.SB_LABEL + "</span>";
+                    //hstr += "<span class=\x22svyItmLabel\x22>" + r.SB_LABEL + "</span>";
                     switch (r.SB_TYPE)
                     {
                     case "Range": // Should Create a Horizontal 'Slider'
-                        hstr += "&nbsp";
+                    	hstr += "<fieldset class=\x22fs-RNG\x22><legend>" + r.SB_LABEL + "</legend>";
+                        //hstr += "&nbsp";
                         var r_min;
                         var r_max;
+                        var r_val;
                         (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
                         (r.SB_MAX > 10) ? r_max = 10 : r_max = r.SB_MAX;
                         if (r_min <= r_max ) // safety precaution - check upon data entry
                         {
-                            hstr += "&nbsp" + r_min + "&nbsp<input type=RANGE name=\x22RANGE\x22 min=\x22" + r_min + "\x22 max=\x22" + r_max + "\x22>&nbsp" + r_max + "&nbsp";
+                        	r_val = Math.round(r_min + ((r_max - r_min) / 2));
+                            hstr += "&nbsp" + r_min + "&nbsp";
+                            hstr += "<input type=RANGE id=\x22srng\x22 name=\x22RANGE\x22 min=\x22" + r_min + "\x22 max=\x22" + r_max + "\x22 ";
+                            hstr += "value=" + r_val + " oninput=\x22rval.value=srng.value\x22 >";
+                            hstr += "&nbsp" + r_max + "&nbsp";
                         }
-                        hstr += "<button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
+                        hstr += "<br>[&nbsp<output id=\x22rval\x22>" + r_val + "</output>&nbsp]";
+                        hstr += "</fieldset>";
+                        hstr += "&nbsp&nbsp<button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
                         hstr += "&nbsp&nbsp<output name=\x22STATUS\x22 class=\x22svyPostedTxt\x22 value=\x22Ready\x22>Ready</output>";
                         hstr += "<input type=HIDDEN name=\x22SURVEY\x22 value=\x22" + lscd + "\x22>";
                         hstr += "</form><br>";
@@ -100,6 +108,7 @@ function load_survey()
                         break;
                     case "V_Radio":
                     	hstr += "<br>";
+                    	hstr += "<fieldset class=\x22fs-VRB\x22><legend>" + r.SB_LABEL + "</legend>";
                         var r_min;
                         var r_max;
                         (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
@@ -115,7 +124,8 @@ function load_survey()
                                 hstr += j + "&nbsp<input type=RADIO name=\x22RATING\x22 value=" + j + "><br>";
                             }
                         }
-                        hstr += "<br><button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
+                        hstr += "</fieldset>";
+                        hstr += "<br><br><button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
                         hstr += "<br><br><output name=\x22STATUS\x22 class=\x22svyPostedTxt\x22 value=\x22Ready\x22>Ready</output>";
                         hstr += "<input type=HIDDEN name=\x22SURVEY\x22 value=\x22" + lscd + "\x22>";
                         hstr += "</form><br><br>";
@@ -123,6 +133,7 @@ function load_survey()
                     	break;
                     default: // case "H_Radio":"
                         hstr += "&nbsp";
+                    	hstr += "<fieldset class=\x22fs-HRB\x22><legend>" + r.SB_LABEL + "</legend>";
                         var r_min;
                         var r_max;
                         (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
@@ -134,7 +145,8 @@ function load_survey()
                                 hstr += j + "&nbsp<input type=RADIO name=\x22RATING\x22 value=" + j + ">&nbsp";
                             }
                         }
-                        hstr += "<button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
+                        hstr += "</fieldset>";
+                        hstr += "&nbsp&nbsp<button onclick=\x22post_it(this);return(false);\x22>Submit</button>";
                         hstr += "&nbsp&nbsp<output name=\x22STATUS\x22 class=\x22svyPostedTxt\x22 value=\x22Ready\x22>Ready</output>";
                         hstr += "<input type=HIDDEN name=\x22SURVEY\x22 value=\x22" + lscd + "\x22>";
                         hstr += "</form><br>";

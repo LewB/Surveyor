@@ -39,6 +39,12 @@ function survey_init(result)
 		history.back();
 	}
 	// True: Keys Matched - Go ahead and Initialize the Doc
+	// SET LISTENER FOR HOME NAVIGATION BUTTON
+	document.getElementById("svy_home_btn").addEventListener("click", function(e) {
+    	e.preventDefault();
+    	history.back();
+  	});
+	
     document.getElementById("svyUser").innerHTML = g_user;
     
   	// SET LISTENER FOR ADD SURVEY HEADER BUTTON
@@ -125,7 +131,7 @@ function surveyHdr_list()
     // Build Survey Header Data Table
     var pstr = "SURVEY=*&SVPART=HEADER&SVOWNER=" + g_user;
     
-    //alert( "Calling loadsurvey with: " + pstr);
+    //alert( "Calling loadsurvey.py with: " + pstr);
     loadXMLDoc("POST", "/cgi-bin/rsp_loadsurvey.py", pstr, function()
     {
         // HTTP POST REQUEST ASYNCHRONOUS CALLBACK FUNCTION

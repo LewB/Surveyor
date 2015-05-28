@@ -24,7 +24,11 @@ function admin_initDoc(result)
 	if ( result == true )
 	{
 		// True: Keys Match - Go ahead and Initialize the Doc
-		
+		// SET LISTENER FOR HOME NAVIGATION BUTTON
+		document.getElementById("adm_home_btn").addEventListener("click", function(e) {
+	    	e.preventDefault();
+	    	history.back();
+	  	});
         document.getElementById("logUserID").innerHTML = g_user;
         admin_initlist();
 	}

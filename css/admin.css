@@ -149,7 +149,7 @@ input.cs2, input.cs3, input.cs4 {
 }
 
 .stdBtn:hover:not([disabled]) {
-  background: white;
+  background: #F2F2F2;
   border: 1px solid rgba(0, 0, 0, 1);
 }
 
