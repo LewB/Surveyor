@@ -125,7 +125,7 @@ function surveyHdr_list()
     // Build Survey Header Data Table
     var pstr = "SURVEY=*&SVPART=HEADER&SVOWNER=" + g_user;
     
-    alert( "Calling loadsurvey with: " + pstr);
+    //alert( "Calling loadsurvey with: " + pstr);
     loadXMLDoc("POST", "/cgi-bin/rsp_loadsurvey.py", pstr, function()
     {
         // HTTP POST REQUEST ASYNCHRONOUS CALLBACK FUNCTION
