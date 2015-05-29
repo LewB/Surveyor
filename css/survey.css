@@ -136,7 +136,7 @@ table#svyHdrTblBody, table#svyDtlTblBody {
   background-color: #DCDCDC;
   border-spacing: 3px;
 }
-input[class*="_c"], input[class*="_ro"] {
+input[class*="_c"], input[class*="_ro"], select[class*="_c"], select[class*="_ro"] {
   position: absolute;
   top: 0;
   left: 0;
@@ -148,13 +148,13 @@ input[class*="_c"], input[class*="_ro"] {
   text-indent: 0.5em;
   background-color: #F2F2F2;
 }
-input[class*="_c"]:hover {
+input[class*="_c"]:hover, select[class*="_c"]:hover {
   background-color: white;
 }
-input[class*="_c"]:focus {
+input[class*="_c"]:focus, select[class*="_c"]:focus {
   background-color: white;
 }
-input[class$="s"] {
+input[class$="s"], select[class$="s"] {
   background-color: lightcyan;
 }
 

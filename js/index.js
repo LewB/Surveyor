@@ -83,7 +83,7 @@ function load_survey()
                     switch (r.SB_TYPE)
                     {
                     case "Range": // Should Create a Horizontal 'Slider'
-                    	hstr += "<fieldset class=\x22fs-RNG\x22><legend>" + r.SB_LABEL + "</legend>";
+                    	hstr += "<br><fieldset class=\x22fs-RNG\x22><legend>" + r.SB_LABEL + "</legend>";
                         //hstr += "&nbsp";
                         var r_min;
                         var r_max;
@@ -107,8 +107,7 @@ function load_survey()
                         html.push(hstr);
                         break;
                     case "V_Radio":
-                    	hstr += "<br>";
-                    	hstr += "<fieldset class=\x22fs-VRB\x22><legend>" + r.SB_LABEL + "</legend>";
+                    	hstr += "<br><fieldset class=\x22fs-VRB\x22><legend>" + r.SB_LABEL + "</legend>";
                         var r_min;
                         var r_max;
                         (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;
@@ -131,9 +130,9 @@ function load_survey()
                         hstr += "</form><br><br>";
                         html.push(hstr);
                     	break;
-                    default: // case "H_Radio":"
-                        hstr += "&nbsp";
-                    	hstr += "<fieldset class=\x22fs-HRB\x22><legend>" + r.SB_LABEL + "</legend>";
+                    default: // also handles -> case "H_Radio":"
+                        //hstr += "&nbsp";
+                    	hstr += "<br><fieldset class=\x22fs-HRB\x22><legend>" + r.SB_LABEL + "</legend>";
                         var r_min;
                         var r_max;
                         (r.SB_MIN < 1) ? r_min = 1 : r_min = r.SB_MIN;

@@ -162,21 +162,29 @@ function surveyHdr_list()
                 	}
                     hstr = "<tr onclick=\x22headerTableRowClick(this);\x22>" 
                     		+ "<td class=\x22ck1\x22><input type=\x22checkbox\x22 value=\x22"
-                    		+ pJSON[i].SH_ROWID + "\x22</td>";
+                    		+ pJSON[i].SH_ROWID + "\x22></td>";
                 	hstr += "<td><input type=\x22text\x22 class=\x22h_c2" + clsSfx + "\x22 value=\x22" 
-                				+ pJSON[i].SH_CODE + "\x22</td>";
+                				+ pJSON[i].SH_CODE + "\x22></td>";
                 	hstr += "<td><input type=\x22text\x22 DISABLED class=\x22h_ro" + clsSfx + "\x22 value=\x22" 
-                				+ pJSON[i].SH_OWNER + "\x22</td>";
-                    hstr += "<td><input type=\x22text\x22 class=\x22h_c4" + clsSfx + "\x22 value=\x22" 
-                    			+ pJSON[i].SH_STATUS + "\x22</td>";
-                    hstr += "<td><input type=\x22text\x22 class=\x22h_c5" + clsSfx + "\x22 value=\x22" 
-                    			+ pJSON[i].SH_TYPE + "\x22</td>";
+                				+ pJSON[i].SH_OWNER + "\x22></td>";
+                    //hstr += "<td><input type=\x22text\x22 class=\x22h_c4" + clsSfx + "\x22 value=\x22" 
+                	hstr += "<td><select class=\x22h_c4" + clsSfx + "\x22>";
+                	var pJsts = pJSON[i].SH_STATUS;
+                	hstr += "<option value=\x22Ready\x22" + (pJsts == "Ready" ? " selected>" : ">") + "Ready</option>";
+                	hstr += "<option value=\x22Hold\x22" + (pJsts == "Hold" ? " selected>" : ">") + "Hold</option>";
+                	hstr += "</select></td>";
+                    //hstr += "<td><input type=\x22text\x22 class=\x22h_c5" + clsSfx + "\x22 value=\x22" 
+                	hstr += "<td><select class=\x22h_c5" + clsSfx + "\x22>";
+                	var pJtyp = pJSON[i].SH_TYPE;
+                	hstr += "<option value=\x22Default\x22" + (pJtyp == "Default" ? " selected>" : ">") + "Default</option>";
+                	hstr += "</select></td>";
+                    			+ pJSON[i].SH_TYPE + "\x22></td>";
                     hstr += "<td><input type=\x22text\x22 class=\x22h_c6" + clsSfx + "\x22 value=\x22" 
-                    			+ pJSON[i].SH_NAME + "\x22</td>";
+                    			+ pJSON[i].SH_NAME + "\x22></td>";
                     hstr += "<td><input type=\x22text\x22 class=\x22h_c7" + clsSfx + "\x22 value=\x22" 
-                    			+ pJSON[i].SH_DESC + "\x22</td>";
+                    			+ pJSON[i].SH_DESC + "\x22></td>";
                     hstr += "<td><input type=\x22text\x22 class=\x22h_c8" + clsSfx + "\x22 value=\x22" 
-                    			+ pJSON[i].SH_SKIN + "\x22</td></tr>";
+                    			+ pJSON[i].SH_SKIN + "\x22></td></tr>";
                     html.push(hstr);
                 }
                 setStatus("Enter Data and Select and Action.");
@@ -235,8 +243,15 @@ function surveyDtl_list()
                     			+ pJSON[i].SB_ROWID + "\x22</td>";
                 	hstr += "<td><input type=\x22text\x22 class=\x22d_c2\x22 value=\x22" 
                 				+ pJSON[i].SB_SEQ + "\x22</td>";
-                	hstr += "<td><input type=\x22text\x22 class=\x22d_c3\x22 value=\x22" 
-                				+ pJSON[i].SB_TYPE + "\x22</td>";
+                	//hstr += "<td><input type=\x22text\x22 class=\x22d_c3\x22 value=\x22" 
+                				//+ pJSON[i].SB_TYPE + "\x22</td>";
+                	hstr += "<td><select class=\x22d_c3\x22>";
+                	var pJtyp = pJSON[i].SB_TYPE;
+                	hstr += "<option value=\x22H_Radio\x22" + (pJtyp == "H_Radio" ? " selected>" : ">") + "H_Radio</option>";
+                	hstr += "<option value=\x22V_Radio\x22" + (pJtyp == "V_Radio" ? " selected>" : ">") + "V_Radio</option>";
+                	hstr += "<option value=\x22Range\x22" + (pJtyp == "Range" ? " selected>" : ">") + "Range</option>";
+                	hstr += "<option value=\x22Default\x22" + (pJtyp == "Default" ? " selected>" : ">") + "Default</option>";
+                	hstr += "</select></td>";
                     hstr += "<td><input type=\x22text\x22 class=\x22d_c4\x22 value=\x22" 
                     			+ pJSON[i].SB_TITLE + "\x22</td>";
                     hstr += "<td><input type=\x22text\x22 class=\x22d_c5\x22 value=\x22" 
@@ -554,7 +569,7 @@ function update_rec(part, mode, p_id, data)
     });
 }
 // Function to pack header data in JSON format
-// Call with table rows element as rows parameter
+// Call with part ("H" or "D") and table rows object as 'rows' parameter
 function JSON_data(part, rows)
 {
 	var data = "[";
@@ -562,11 +577,15 @@ function JSON_data(part, rows)
 	{
 		for ( var i = 0; i < rows.length; i++ )
 		{
+			var hc3 = rows[i].cells[3].firstChild;
+			var hc4 = rows[i].cells[4].firstChild;
 			data += "{\x22SH_ROWID\x22:\x22" + rows[i].cells[0].firstChild.value + "\x22," 
 					+ "\x22SH_CODE\x22:\x22" + rows[i].cells[1].firstChild.value + "\x22," 
 					+ "\x22SH_OWNER\x22:\x22" + rows[i].cells[2].firstChild.value + "\x22," 
-					+ "\x22SH_STATUS\x22:\x22" + rows[i].cells[3].firstChild.value + "\x22," 
-					+ "\x22SH_TYPE\x22:\x22" + rows[i].cells[4].firstChild.value + "\x22," 
+					//+ "\x22SH_STATUS\x22:\x22" + rows[i].cells[3].firstChild.value + "\x22," 
+					+ "\x22SH_STATUS\x22:\x22" + hc3.options[hc3.selectedIndex].value + "\x22," 
+					//+ "\x22SH_TYPE\x22:\x22" + rows[i].cells[4].firstChild.value + "\x22," 
+					+ "\x22SH_TYPE\x22:\x22" + hc4.options[hc4.selectedIndex].value + "\x22," 
 					+ "\x22SH_NAME\x22:\x22" + rows[i].cells[5].firstChild.value + "\x22," 
 					+ "\x22SH_DESC\x22:\x22" + rows[i].cells[6].firstChild.value + "\x22," 
 					+ "\x22SH_SKIN\x22:\x22" + rows[i].cells[7].firstChild.value + "\x22}";
@@ -580,10 +599,12 @@ function JSON_data(part, rows)
 	{
 		for ( var i = 0; i < rows.length; i++ )
 		{
+			var dc2 = rows[i].cells[2].firstChild;
 			data += "{\x22SB_ROWID\x22:\x22" + rows[i].cells[0].firstChild.value + "\x22," 
 					+ "\x22SB_HDR\x22:\x22" + g_sb_hdr + "\x22," 
 					+ "\x22SB_SEQ\x22:\x22" + rows[i].cells[1].firstChild.value + "\x22," 
-					+ "\x22SB_TYPE\x22:\x22" + rows[i].cells[2].firstChild.value + "\x22," 
+					//+ "\x22SB_TYPE\x22:\x22" + rows[i].cells[2].firstChild.value + "\x22," 
+					+ "\x22SB_TYPE\x22:\x22" + dc2.options[dc2.selectedIndex].value + "\x22," 
 					+ "\x22SB_TITLE\x22:\x22" + rows[i].cells[3].firstChild.value + "\x22," 
 					+ "\x22SB_DESC\x22:\x22" + rows[i].cells[4].firstChild.value + "\x22," 
 					+ "\x22SB_LABEL\x22:\x22" + rows[i].cells[5].firstChild.value + "\x22," 
