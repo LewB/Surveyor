@@ -9,7 +9,7 @@ allows a Survey creator user to login and create surveys that are later
 run by survey users. Each survey creates its own SQLite3 database in
 the '/data' directory under the http server root. The survey user then
 navigates to the 'index.html' file in the http server's root directory and
-then simply enters the survey code (which is the name of the database).
+then simply enters the survey code (which is also the name of the database).
 The survey will appear in the same page and the responses to the survey are
 stored in the database with the name ('TITLE') of the item and a time stamp
 and the value of the item. Current item type choices are:
@@ -64,3 +64,8 @@ THIS COMPONENT REQUIRES (in http root):
 ## CHANGE LOG
 05-04-15 ALB Moved online GitHub repo up a directory level
 			 Created new local eGit clone repository
+05-29-15 ALB Fixed myriad of bugs, Added "HOME" button to take user back to
+             the main navigation page. Added boxes around choices using the
+             HTML <fieldset> tag, and added pulldown lists for items in the
+             Survey Setup page using dynamic <select><option> tags.
+             
