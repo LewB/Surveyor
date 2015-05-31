@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<!--
+******************************************************
+NAME: responses.html
+******************************************************
+USAGE:
+******************************************************
+FUNCTIONAL DESCRIPTION: 
+This file defines DOM elements for the display of
+the survey responses screen.
+********************************************************
+MODIFICATION HISTORY:
+05-30-2015-ALB File Created.
+
+********************************************************
+-->
+<head>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable:no;">
+<link rel="stylesheet" type="text/css" href="../css/responses.css">
+<link rel="stylesheet" type="text/css" href="../css/display.css">
+<script type="text/javascript" src="../js/responses.js"></script>
+<script>window.onload = initResp;</script>
+
+<title>Python Survey Response Display</title>
+</head>
+<body>
+<div id="svyCodeDiv">
+	<form id="svyCodeFrm">
+		<p>SELECT A SURVEY</p>
+	    Survey Code:&nbsp;
+	    <select id="svySelect">
+	    </select>
+	    <br><br>
+	    <button type="button" id="svyCodeBtn" class="actionBtn">DISPLAY</button>
+	    &nbsp;&nbsp;&nbsp;&nbsp;
+	    <button type="button" class="actionBtn" onclick="window.close()">CANCEL</button>
+	</form>
+</div>
+<div id="svyDisplayDiv">
+</div>
+</body>
+</html>

@@ -31,12 +31,12 @@ def main():
     
     print "Content-Type: text/html; charset=utf-8"
     print
-    print "<!DOCTYPE html>"
-    print "<html>"
-    print "<head>"
-    print '''<link rel="stylesheet" type="text/css" href="../css/display.css"></head>'''
-    print "<title>Survey " + svCode + " Responses</title>"
-    print "<body>"
+    #print "<!DOCTYPE html>"
+    #print "<html>"
+    #print "<head>"
+    #print '''<link rel="stylesheet" type="text/css" href="../css/display.css"></head>'''
+    #print "<title>Survey " + svCode + " Responses</title>"
+    #print "<body>"
     print "<h2>Current Responses for Survey: " + svCode + "</h2>"
     
     try:
@@ -90,7 +90,7 @@ def main():
     finally:
         print "<br><em>*** DISPLAY COMPLETE ***</em><br><br>&nbsp&nbsp&nbsp&nbsp"
         print '''<button onclick="window.close()">OK</button>'''
-        print "</body></html>"
+        #print "</body></html>"
     
     if dbc:
         dbc.close()

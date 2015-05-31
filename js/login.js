@@ -25,7 +25,7 @@ function setitup()
     	window.history.replaceState({logid: g_user, 
     						 search: g_urlSearch
     						 }, document.title, document.location.href);
-    	view_responses();
+    	window.open("/html/responses.html?" + g_user);
   	});
   	// SET LISTENER FOR SETUP SURVEYS BUTTON
 	document.getElementById("navSurvBtn").addEventListener("click", function(e) {
@@ -165,37 +165,4 @@ function post_login()
             }
         }
     });
-}
-// Check Responses
-function view_responses()
-{
-	// Get the Survey Code to Display
-	var svCode = prompt("Enter Survey Code: ");
-	
-	// Create a window to display it in
-	// Could change 2nd argument to make it detachable etc.
-	dwin = window.open("", "");
-	
-	// Build Survey Header Data Table
-    var pstr = "SURVEY=" + svCode;
-    
-    loadXMLDoc("POST", "/cgi-bin/rsp_display.py", pstr, function()
-    {
-        // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
-        if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
-        {
-            //alert("HTTPresp: " + g_xmlhttp.responseText);
-            if (g_xmlhttp.responseText != "")
-            {
-                dwin.document.write(g_xmlhttp.responseText);
-            }
-            else
-            {
-                // GOT A PROCESSING ERROR
-                //alert(g_xmlhttp.responseText);
-                setStatus("<h2 class=\x22err\x22>ERROR Loading Survey Response Window.</h2>");
-            }
-        }
-    });
-    dwin.focus();
 }

@@ -1,0 +1,87 @@
+/* CSS file for responses.html. */
+/*
+ ****** GENERAL HTML BODY ELEMENTS *******
+ */
+body {
+  margin-top: 15px;
+  margin-left: 50px;
+  margin-right: 50px;
+  background-color: #F2F2F2;
+}
+
+h2 {
+  text-align: left;
+}
+
+p {
+  padding-left: 25px;
+}
+
+form {
+  width: auto;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+/*
+ ******* SURVEY TITLE AND DEXCRIPTION HEADERS ******
+ */
+div.TitleClass {
+  width: auto;
+  background-color: transparent;
+  border: 2px transparent;
+  border-radius: 15px;
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 150%;
+}
+div.DescClass {
+  width: auto;
+  height: 20px;
+  background-color: transparent;
+  border: 2px transparent;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 125%;
+}
+
+/*
+ ****** SURVRY CODE ENTRY DIALOG ******
+ */
+div#svyCodeDiv {
+  position: relative;
+  top: 100px;
+  display: block;
+  margin: 0 auto;
+  width: 300px;
+  background-color: #B2FFFF;
+  border: 2px transparent;
+  border-radius: 15px;
+  box-shadow: 10px 20px 30px lightblue;
+}
+form#svyCodeFrm {
+  width: auto;
+  height: auto;
+  border: none;
+  background-color: transparent;
+}
+form#svyCodeFrm > p {
+  position: relative;
+  display: block;
+  padding-left: 0;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+}
+form#svyCodeFrm > button.actionBtn {
+  display: inline;
+  padding-left: 32pt;
+  background-color: transparent;
+  border-color: transparent;
+  font-weight: bold;
+  color: rgba(0,0,0,0.65);
+}
+form#svyCodeFrm > button.actionBtn:hover {
+  color: rgba(0,0,0,1.0);
+}

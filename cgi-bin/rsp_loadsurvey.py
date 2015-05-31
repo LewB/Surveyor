@@ -67,7 +67,6 @@ def main():
         else:
             csr.execute("SELECT ROWID AS SH_ROWID,* FROM SURVEY_HDR WHERE SH_CODE='" + svCode + "';")
         rows = csr.fetchall()
-        print rows
         if rows != None:
             # Convert to JSON Data
             hdr_json = json.dumps( [dict(idx) for idx in rows] )
