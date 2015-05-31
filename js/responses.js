@@ -7,66 +7,65 @@
  **************************************************************
  * MODIFICATION HISTORY:
  * 05-30-2015 Created ALB
+ * 05-31-2015 ALB Added encrypted login check for viewing of
+ *                survey responses from HOME page.
  *************************************************************
  */
-//************************************************************
-// GLOBAL AREA
-//------------------------------------------------------------
-// Constants
-
-// Variables
-var g_user;
-var g_xmlhttp;
-//**************************************************************
-//
-// *** BEGIN AJAX - HTTP REQUEST PROCESSING CODE ***
-function loadXMLDoc(mode, url, pstr, cbfunc)
-{
-    // AJAX code for IE7+, Firefox, Chrome, Opera, Safari
-    g_xmlhttp = new XMLHttpRequest();
-    // IE < IE7 no go.
-    g_xmlhttp.onreadystatechange = cbfunc;
-    g_xmlhttp.open(mode, url, true);
-    g_xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    g_xmlhttp.send(pstr);
-}
-// Use Global variable g_xmlhttp for function access to HTTP response
-// *** END AJAX - HTTP REQUEST PROCESSING CODE ***
-
-// INITIALIZE DOM ELEMENTS
+//CHECK FOR VALID LOGIN
 function initResp()
 {
-	document.getElementById("svyCodeBtn").addEventListener("click", function(e) {
-		e.preventDefault();
-		document.getElementById("svyCodeDiv").style.display = "none";
-    	view_responses();
-	});
-	var cst = window.location.href;
-	//Get user from window's url
-	g_user = cst.split("?",2)[1];
-	var pstr;
+	check_login("url", location.search, resp_initDoc);
+	// admin_initDoc() will be called asynchronously by HTTPRequest
+	// after it Returns from processing the login check, the
+	// function will be called with 'result' as the parameter.
+	// IMPORTANT: Nothing stops DOC flow before next event loop
+}
+// Init Document
+function resp_initDoc(result)
+{
+	if ( result == true )
+	{
+		// True: Keys Match - Go ahead and Initialize the Doc
+		// SET LISTENER FOR HOME NAVIGATION BUTTON
+		document.getElementById("svyCodeBtn").addEventListener("click", function(e) {
+			e.preventDefault();
+			document.getElementById("svyCodeDiv").style.display = "none";
+	    	view_responses();
+		});
+        document.getElementById("svyUser").innerHTML = g_user;
+        resp_setup();
+	}
+	else
+	{
+		// False: Keys DON'T Match - Stale or Unauthorized User
+		alert("You Are Not Logged In or Your Login Timed Out.");
+	}
+}
+// INITIALIZE DOM ELEMENTS
+function resp_setup()
+{
 	pstr = "SVOWNER=" + g_user;
 	loadXMLDoc("POST", "../cgi-bin/rsp_surveycodes.py", pstr, function()
-		    {
-		        // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
-		        if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
-		        {
-		            //alert("HTTPresp: " + g_xmlhttp.responseText);
-		            if (g_xmlhttp.responseText[0] != "E")
-		            {
-		            	var selm = document.getElementById("svySelect");
-		            	var pJSON = JSON.parse(g_xmlhttp.responseText);
-		                for (var i = 0; i < pJSON.length; i++)
-		                {
-		                	//alert("Got a JSON Row for: " + pJSON[i].SH_CODE);
-		                	var opt = document.createElement("option");
-			            	opt.text = pJSON[i].SH_CODE;
-			            	opt.value = opt.text;
-			            	selm.options.add(opt);
-		                }
-		            }
-		        }
-		    });
+    {
+        // HTTP GET REQUEST ASYNCHRONOUS CALLBACK FUNCTION
+        if (g_xmlhttp.readyState == 4 && g_xmlhttp.status == 200)
+        {
+            //alert("HTTPresp: " + g_xmlhttp.responseText);
+            if (g_xmlhttp.responseText[0] != "E")
+            {
+            	var selm = document.getElementById("svySelect");
+            	var pJSON = JSON.parse(g_xmlhttp.responseText);
+                for (var i = 0; i < pJSON.length; i++)
+                {
+                	//alert("Got a JSON Row for: " + pJSON[i].SH_CODE);
+                	var opt = document.createElement("option");
+	            	opt.text = pJSON[i].SH_CODE;
+	            	opt.value = opt.text;
+	            	selm.options.add(opt);
+                }
+            }
+        }
+    });
 }
 // HANDLER FUNCTION FOR LOGIN BUTTON ONCLICK EVENT ACTION
 //Check Responses

@@ -25,7 +25,7 @@ function setitup()
     	window.history.replaceState({logid: g_user, 
     						 search: g_urlSearch
     						 }, document.title, document.location.href);
-    	window.open("/html/responses.html?" + g_user);
+    	window.open("/html/responses.html" + g_urlSearch);
   	});
   	// SET LISTENER FOR SETUP SURVEYS BUTTON
 	document.getElementById("navSurvBtn").addEventListener("click", function(e) {

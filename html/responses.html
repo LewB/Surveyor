@@ -19,15 +19,17 @@ MODIFICATION HISTORY:
 <meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable:no;">
 <link rel="stylesheet" type="text/css" href="../css/responses.css">
 <link rel="stylesheet" type="text/css" href="../css/display.css">
+<script type="text/javascript" src="/js/common_lib.js"></script>
 <script type="text/javascript" src="../js/responses.js"></script>
 <script>window.onload = initResp;</script>
 
-<title>Python Survey Response Display</title>
+<title>Survey Response Display</title>
 </head>
 <body>
 <div id="svyCodeDiv">
 	<form id="svyCodeFrm">
-		<p>SELECT A SURVEY</p>
+		<p>SELECT A SURVEY<br>
+		<br>User:&nbsp;<span id="svyUser">None</span></p>
 	    Survey Code:&nbsp;
 	    <select id="svySelect">
 	    </select>
